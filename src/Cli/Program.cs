@@ -29,7 +29,7 @@ namespace Cli
                     .AddJsonFile(context.Configuration["config:file"], optional: true, reloadOnChange: true))
                 .ConfigureServices((context, services) => services
                     .AddLogging(logBuilder => {
-                        var configDir = context.Configuration["config:file"];
+                        var configDir = context.Configuration["config:directory"];
                         var logDir = Path.Combine(configDir, "logs");
                         var logFile = Path.Combine(logDir, "log.json");
 
