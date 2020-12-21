@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.CommandLine.Parsing;
 using System.IO;
@@ -15,18 +17,12 @@ namespace Cli
 {
     internal static class Program
     {
+        private static readonly Option _debugOption = new(
+            new[] { "--debug", "-d" },
+            "Write debug information to the console");
+
         private static async Task<int> Main(string[] args)
         {
-            var debugOption = new Option(
-                new[] { "--debug", "-d" },
-                "Write debug information to the console");
-
-            var parseResult = new CommandLineBuilder()
-                .AddGlobalOption(debugOption)
-                .UseDefaults()
-                .Build()
-                .Parse(args);
-
             var configDir = Path.Join(
                 GetFolderPath(SpecialFolder.UserProfile),
                 ".safir");
@@ -40,37 +36,37 @@ namespace Cli
                 { "config:file", configFile },
                 { "config:exists", File.Exists(configFile).ToString() }
             };
-            
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(staticConfig)
-                .AddEnvironmentVariables("SAFIR_")
-                .AddJsonFile(configFile, optional: true, reloadOnChange: true)
-                .AddCommandLine(args)
-                .Build();
 
-            var logDir = Path.Combine(configDir, "logs");
-            var logFile = Path.Combine(logDir, "log.json");
+            return await CreateBuilder()
+                .UseHost(host => host
+                    .ConfigureAppConfiguration((_, configuration) => configuration
+                        .AddInMemoryCollection(staticConfig)
+                        .AddEnvironmentVariables("SAFIR_")
+                        .AddJsonFile(configFile, optional: true, reloadOnChange: true))
+                    .ConfigureServices((context, services) => services
+                        .AddLogging(logBuilder => {
+                            var logDir = Path.Combine(configDir, "logs");
+                            var logFile = Path.Combine(logDir, "log.json");
 
-            var loggerConfiguration = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.Async(x => x.File(new CompactJsonFormatter(), logFile));
+                            var configuration = new LoggerConfiguration()
+                                .Enrich.FromLogContext()
+                                .WriteTo.Async(x => x.File(new CompactJsonFormatter(), logFile));
 
-            if (parseResult.HasOption(debugOption))
-                loggerConfiguration.WriteTo.Console();
+                            if (context.Properties[typeof(InvocationContext)] is InvocationContext invocation
+                                && invocation.ParseResult.HasOption(_debugOption))
+                            {
+                                configuration.WriteTo.Console();
+                            }
 
-            Log.Logger = loggerConfiguration.CreateLogger();
-
-            var services = new ServiceCollection()
-                .AddLogging(logBuilder => {
-                    logBuilder.AddSerilog(dispose: true);
-                })
-                .Configure<Options>(configuration)
-                .AddSingleton<IConsole, SystemConsole>()
-                .BuildServiceProvider();
-
-            var console = services.GetService<IConsole>();
-
-            return await parseResult.InvokeAsync(console);
+                            logBuilder.AddSerilog(configuration.CreateLogger(), dispose: true);
+                        })
+                        .Configure<Options>(context.Configuration)))
+                .Build()
+                .InvokeAsync(args);
         }
+
+        private static CommandLineBuilder CreateBuilder() => new CommandLineBuilder()
+            .AddGlobalOption(_debugOption)
+            .UseDefaults();
     }
 }
