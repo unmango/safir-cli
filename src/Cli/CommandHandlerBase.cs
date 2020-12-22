@@ -14,7 +14,7 @@ namespace Cli
 
             return method == null
                 ? Task.FromResult(0)
-                : CommandHandler.Create(method).InvokeAsync(context);
+                : CommandHandler.Create(method, this).InvokeAsync(context);
         }
 
         private static bool LikeExecute(MethodInfo method)
