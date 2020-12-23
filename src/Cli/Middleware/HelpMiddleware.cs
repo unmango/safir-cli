@@ -8,11 +8,11 @@ namespace Cli.Middleware
     {
         public static CommandLineBuilder UseHelpForEmptyCommands(this CommandLineBuilder builder) =>
             builder.UseMiddleware((context, next) => {
-                if (context.ParseResult.CommandResult.Children.Count > 0)
+                if (context.ParseResult.CommandResult.Tokens.Count > 0)
                 {
                     return next(context);
                 }
-
+                
                 return CommandHandler.Create((IHelpBuilder help) => {
                     help.Write(context.ParseResult.CommandResult.Command);
                 }).InvokeAsync(context);
