@@ -12,7 +12,7 @@ namespace Cli.Middleware
                 {
                     return next(context);
                 }
-                
+
                 return CommandHandler.Create((IHelpBuilder help) => {
                     help.Write(context.ParseResult.CommandResult.Command);
                 }).InvokeAsync(context);
