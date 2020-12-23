@@ -7,16 +7,11 @@ namespace Cli
 {
     internal abstract class CommandHandlerBase : ICommandHandler
     {
-        private readonly ICommandHandler _inner;
-
-        protected CommandHandlerBase(ICommandHandler inner)
-        {
-            _inner = inner;
-        }
+        protected abstract ICommandHandler GetHandler();
         
         Task<int> ICommandHandler.InvokeAsync(InvocationContext context)
         {
-            return _inner.InvokeAsync(context);
+            return GetHandler().InvokeAsync(context);
         }
         
         protected static ICommandHandler Create(Delegate @delegate) =>
