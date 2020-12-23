@@ -23,7 +23,7 @@ namespace Cli
             "Write debug information to the console");
 
         private static async Task<int> Main(string[] args) => await CreateBuilder()
-            .AddServiceCommand()
+            .AddCommand(new ServiceCommand())
             .UseHost(host => host
                 .AddServiceCommand()
                 .ConfigureHostConfiguration(configuration => {
