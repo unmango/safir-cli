@@ -12,16 +12,19 @@ namespace Cli.Commands
         {
             AddAlias("s");
             AddCommand(new RestartCommand());
+            AddCommand(new StartCommand());
         }
     }
 
     internal static class ServiceCommandExtensions
     {
         public static T AddServiceCommand<T>(this T builder)
-            where T : CommandLineBuilder =>
-            builder.AddCommand(new ServiceCommand());
+            where T : CommandLineBuilder => builder
+            .AddCommand(new ServiceCommand())
+            .AddCommand(new StartCommand());
 
         public static IHostBuilder AddServiceCommand(this IHostBuilder builder) => builder
-            .UseCommandHandler<RestartCommand, RestartCommand.RestartHandler>();
+            .UseCommandHandler<RestartCommand, RestartCommand.RestartHandler>()
+            .UseCommandHandler<StartCommand, StartCommand.StartHandler>();
     }
 }
