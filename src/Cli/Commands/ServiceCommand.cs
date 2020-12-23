@@ -1,8 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
-using System.CommandLine.Invocation;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
 namespace Cli.Commands
@@ -12,16 +10,6 @@ namespace Cli.Commands
         public ServiceCommand() : base("service", "Control various Safir services")
         {
             AddAlias("s");
-        }
-    }
-
-    internal sealed class ServiceHandler : CommandHandlerBase
-    {
-        protected override ICommandHandler GetHandler() => Create(Execute);
-
-        private void Execute()
-        {
-            
         }
     }
 
@@ -35,7 +23,7 @@ namespace Cli.Commands
 
         public static IHostBuilder AddServiceCommand(this IHostBuilder builder)
         {
-            return builder.UseCommandHandler<ServiceCommand, ServiceHandler>();
+            return builder.UseCommandHandler<ServiceCommand, ShowHelpHandler>();
         }
     }
 }
