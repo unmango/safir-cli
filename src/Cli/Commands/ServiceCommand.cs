@@ -9,7 +9,7 @@ namespace Cli.Commands
 {
     internal sealed class ServiceCommand : Command
     {
-        public ServiceCommand() : base("service", "Control various Safir services.")
+        public ServiceCommand() : base("service", "Control various Safir services")
         {
             AddAlias("s");
         }
