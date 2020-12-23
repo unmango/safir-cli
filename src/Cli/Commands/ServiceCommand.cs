@@ -13,6 +13,7 @@ namespace Cli.Commands
             AddCommand(new RestartCommand());
             AddCommand(new StartCommand());
             AddCommand(new StatusCommand());
+            AddCommand(new StopCommand());
         }
     }
 
@@ -21,6 +22,7 @@ namespace Cli.Commands
         public static IHostBuilder AddServiceCommand(this IHostBuilder builder) => builder
             .UseCommandHandler<RestartCommand, RestartCommand.RestartHandler>()
             .UseCommandHandler<StartCommand, StartCommand.StartHandler>()
-            .UseCommandHandler<StatusCommand, StatusCommand.StatusHandler>();
+            .UseCommandHandler<StatusCommand, StatusCommand.StatusHandler>()
+            .UseCommandHandler<StopCommand, StopCommand.StopHandler>();
     }
 }
