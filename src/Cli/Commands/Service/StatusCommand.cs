@@ -1,7 +1,21 @@
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.Threading.Tasks;
+
 namespace Cli.Commands.Service
 {
-    public class StatusCommand
+    internal sealed class StatusCommand : Command
     {
+        public StatusCommand() : base("status", "Get the status of the selected service")
+        {
+        }
         
+        public sealed class StatusHandler : ICommandHandler
+        {
+            public Task<int> InvokeAsync(InvocationContext context)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
     }
 }

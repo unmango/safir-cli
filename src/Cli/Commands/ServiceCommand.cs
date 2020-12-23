@@ -12,6 +12,7 @@ namespace Cli.Commands
             AddAlias("s");
             AddCommand(new RestartCommand());
             AddCommand(new StartCommand());
+            AddCommand(new StatusCommand());
         }
     }
 
@@ -19,6 +20,7 @@ namespace Cli.Commands
     {
         public static IHostBuilder AddServiceCommand(this IHostBuilder builder) => builder
             .UseCommandHandler<RestartCommand, RestartCommand.RestartHandler>()
-            .UseCommandHandler<StartCommand, StartCommand.StartHandler>();
+            .UseCommandHandler<StartCommand, StartCommand.StartHandler>()
+            .UseCommandHandler<StatusCommand, StatusCommand.StatusHandler>();
     }
 }
