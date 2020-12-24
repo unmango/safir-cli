@@ -1,7 +1,25 @@
+using System.CommandLine;
+
 namespace Cli.Commands.Service
 {
-    public class ServiceOption
+    internal sealed class ServiceOption : Option
     {
+        private static readonly string[] _services = {
+            "listener",
+            "all"
+        };
         
+        public ServiceOption() : base(
+            new[] { "--service", "-s" },
+            "The service the modify")
+        {
+            IsRequired = true;
+            Argument = new Argument<string>("name", "The name of the service") {
+                Arity = new ArgumentArity(1, _services.Length),
+            };
+
+            Argument.FromAmong(_services);
+            Argument.AddSuggestions(_services);
+        }
     }
 }
