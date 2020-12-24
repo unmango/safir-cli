@@ -60,7 +60,6 @@ namespace Cli
             .InvokeAsync(args);
 
         private static CommandLineBuilder CreateBuilder() => new CommandLineBuilder()
-            .UseRequireServiceName()
             .UseHelpForEmptyCommands()
             .AddGlobalOption(_debugOption)
             .UseDefaults();
