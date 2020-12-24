@@ -8,6 +8,7 @@ namespace Cli.Commands.Service
     {
         public StartCommand() : base("start", "Start the selected service")
         {
+            AddOption(ServiceOption.Value);
         }
         
         public sealed class StartHandler : ICommandHandler

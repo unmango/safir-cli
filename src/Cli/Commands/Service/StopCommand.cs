@@ -8,6 +8,7 @@ namespace Cli.Commands.Service
     {
         public StopCommand() : base("stop", "Stop the selected service")
         {
+            AddOption(ServiceOption.Value);
         }
         
         public sealed class StopHandler : ICommandHandler

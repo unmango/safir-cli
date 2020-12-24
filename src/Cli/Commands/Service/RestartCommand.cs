@@ -9,6 +9,7 @@ namespace Cli.Commands.Service
         public RestartCommand() : base("restart", "Restart the selected service")
         {
             AddAlias("r");
+            AddOption(ServiceOption.Value);
         }
         
         public sealed class RestartHandler : ICommandHandler

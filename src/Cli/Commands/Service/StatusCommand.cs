@@ -8,6 +8,7 @@ namespace Cli.Commands.Service
     {
         public StatusCommand() : base("status", "Get the status of the selected service")
         {
+            AddOption(ServiceOption.Value);
         }
         
         public sealed class StatusHandler : ICommandHandler
