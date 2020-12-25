@@ -6,7 +6,6 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.IO;
 using System.Threading.Tasks;
-using Cli.Commands;
 using Cli.Middleware;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
