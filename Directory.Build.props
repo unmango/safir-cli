@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <EnableCodeStyleInBuild>true</EnableCodeStyleInBuild>
