@@ -12,6 +12,7 @@ namespace Cli.Commands.Service
             AddOption(ServiceOption.Value);
         }
         
+        // ReSharper disable once ClassNeverInstantiated.Global
         public sealed class RestartHandler : ICommandHandler
         {
             public Task<int> InvokeAsync(InvocationContext context)
