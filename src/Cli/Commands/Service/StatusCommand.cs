@@ -6,7 +6,7 @@ namespace Cli.Commands.Service
 {
     internal sealed class StatusCommand : Command
     {
-        public StatusCommand() : base("status", "Get the status of the selected service")
+        public StatusCommand() : base("status", "Get the status of the selected service(s)")
         {
             AddOption(ServiceOption.Value);
         }

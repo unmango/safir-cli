@@ -6,7 +6,7 @@ namespace Cli.Commands.Service
 {
     internal sealed class RestartCommand : Command
     {
-        public RestartCommand() : base("restart", "Restart the selected service")
+        public RestartCommand() : base("restart", "Restart the selected service(s)")
         {
             AddAlias("r");
             AddOption(ServiceOption.Value);

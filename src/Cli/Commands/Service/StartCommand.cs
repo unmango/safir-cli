@@ -6,7 +6,7 @@ namespace Cli.Commands.Service
 {
     internal sealed class StartCommand : Command
     {
-        public StartCommand() : base("start", "Start the selected service")
+        public StartCommand() : base("start", "Start the selected service(s)")
         {
             AddOption(ServiceOption.Value);
         }

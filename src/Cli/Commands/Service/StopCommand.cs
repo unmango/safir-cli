@@ -6,7 +6,7 @@ namespace Cli.Commands.Service
 {
     internal sealed class StopCommand : Command
     {
-        public StopCommand() : base("stop", "Stop the selected service")
+        public StopCommand() : base("stop", "Stop the selected service(s)")
         {
             AddOption(ServiceOption.Value);
         }
