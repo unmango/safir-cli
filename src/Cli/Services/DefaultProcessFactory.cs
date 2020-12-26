@@ -14,6 +14,11 @@ namespace Cli.Services
             {
                 process = Process.GetProcessById(args.Id.Value);
             }
+
+            if (args.StartInfo != null)
+            {
+                process.StartInfo = args.StartInfo;
+            }
             
             return new ProcessWrapper(process);
         }

@@ -1,7 +1,11 @@
 using System;
+using System.Diagnostics;
 
 namespace Cli.Services
 {
+    /// <summary>
+    /// An abstraction for <see cref="System.Diagnostics.Process"/>.
+    /// </summary>
     internal interface IProcess : IDisposable
     {
         /// <summary>
@@ -12,7 +16,7 @@ namespace Cli.Services
         /// <summary>
         /// Gets the properties to pass to the <see cref="Start"/> method of the <see cref="IProcess"/>.
         /// </summary>
-        IProcessStartInfo StartInfo { get; }
+        ProcessStartInfo StartInfo { get; }
 
         /// <summary>
         /// Starts (or reuses) the process resource that is specified by the StartInfo property of

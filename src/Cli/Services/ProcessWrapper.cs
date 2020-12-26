@@ -8,23 +8,18 @@ namespace Cli.Services
     /// </summary>
     internal sealed class ProcessWrapper : IProcess
     {
-        private readonly Lazy<IProcessStartInfo> _startInfo;
-        
         public ProcessWrapper(Process? process = null)
         {
             Process = process ?? new Process();
-            _startInfo = new Lazy<IProcessStartInfo>(CreateWrapper);
         }
 
         public int Id => Process.Id;
         
         public Process Process { get; }
 
-        public IProcessStartInfo StartInfo => _startInfo.Value;
+        public ProcessStartInfo StartInfo => Process.StartInfo;
 
         public bool Start() => Process.Start();
-
-        private ProcessStartInfoWrapper CreateWrapper() => new(Process.StartInfo);
 
         public void Dispose() => Process.Dispose();
     }
