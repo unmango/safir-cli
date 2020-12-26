@@ -1,5 +1,6 @@
 namespace Cli.Services
 {
     internal record ProcessArguments(
-        int? Id);
+        int? Id,
+        string? Name);
 }
