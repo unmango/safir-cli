@@ -2,6 +2,6 @@ namespace Cli.Services
 {
     internal interface IProcessFactory
     {
-        IProcess CreateProcess();
+        IProcess CreateProcess(ProcessArguments? args = null);
     }
 }
