@@ -1,6 +1,8 @@
+using System;
+
 namespace Cli.Services
 {
-    internal interface IProcess
+    internal interface IProcess : IDisposable
     {
         /// <summary>
         /// Gets the unique identifier for the associated process.

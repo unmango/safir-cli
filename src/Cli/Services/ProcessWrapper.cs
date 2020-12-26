@@ -25,5 +25,7 @@ namespace Cli.Services
         public bool Start() => Process.Start();
 
         private ProcessStartInfoWrapper CreateWrapper() => new(Process.StartInfo);
+
+        public void Dispose() => Process.Dispose();
     }
 }
