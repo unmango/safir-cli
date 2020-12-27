@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using Cli.Services;
 
 namespace Cli.Internal
 {
@@ -14,13 +13,17 @@ namespace Cli.Internal
 
             configure(startInfo);
 
-            return factory.Create(new ProcessArguments(null, startInfo));
+            return Create(factory, new ProcessArguments(null, startInfo));
         }
 
         public static IProcess Create(this IProcessFactory factory, int id)
-            => factory.Create(new ProcessArguments(id));
+            => Create(factory, new ProcessArguments(id));
 
-        public static IProcess Create(this IProcessFactory factory, ProcessArguments? args = null)
-            => factory?.CreateProcess(args) ?? throw new ArgumentNullException(nameof(factory));
+        private static IProcess Create(this IProcessFactory factory, ProcessArguments? args = null)
+        {
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            
+            return factory.Create(args);
+        }
     }
 }

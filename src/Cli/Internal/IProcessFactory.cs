@@ -12,6 +12,6 @@ namespace Cli.Internal
         /// </summary>
         /// <param name="args">The arguments used to create the process.</param>
         /// <returns>An <see cref="IProcess"/> wrapping a <see cref="System.Diagnostics.Process"/>.</returns>
-        IProcess CreateProcess(ProcessArguments? args = null);
+        IProcess Create(ProcessArguments? args = null);
     }
 }

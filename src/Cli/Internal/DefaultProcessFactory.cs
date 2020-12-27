@@ -5,7 +5,7 @@ namespace Cli.Internal
 {
     internal class DefaultProcessFactory : IProcessFactory
     {
-        public IProcess CreateProcess(ProcessArguments? args = null)
+        public IProcess Create(ProcessArguments? args = null)
         {
             if (args == null) return new ProcessWrapper();
             
