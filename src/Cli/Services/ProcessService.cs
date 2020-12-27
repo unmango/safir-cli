@@ -25,8 +25,8 @@ namespace Cli.Services
             IEnumerable<string> args)
         {
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _config = config?.Value ?? throw new ArgumentNullException(nameof(config));
+            _logger = logger;
             _process = process;
             _args = args.ToList();
         }
