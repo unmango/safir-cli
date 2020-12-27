@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
+using Cli.Services;
 
-namespace Cli.Services
+namespace Cli.Internal
 {
     internal static class ProcessFactoryExtensions
     {

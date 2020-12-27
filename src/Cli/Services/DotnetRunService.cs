@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cli.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

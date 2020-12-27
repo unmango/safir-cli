@@ -1,7 +1,6 @@
-using System;
 using System.Diagnostics;
 
-namespace Cli.Services
+namespace Cli.Internal
 {
     /// <summary>
     /// Wraps <see cref="Process"/>.

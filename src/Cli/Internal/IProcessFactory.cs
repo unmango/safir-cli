@@ -1,4 +1,6 @@
-namespace Cli.Services
+using Cli.Services;
+
+namespace Cli.Internal
 {
     /// <summary>
     /// An abstraction for creating new <see cref="System.Diagnostics.Process"/>es.
