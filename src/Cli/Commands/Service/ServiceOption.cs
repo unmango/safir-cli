@@ -8,8 +8,6 @@ namespace Cli.Commands.Service
             "listener",
             "all"
         };
-
-        public static readonly ServiceOption Value = new();
         
         public ServiceOption() : base(
             new[] { "--service", "-s" },
