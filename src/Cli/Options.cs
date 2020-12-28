@@ -5,7 +5,9 @@ namespace Cli
 {
     internal record Options
     {
-        public Config? Config { get; init; }
+        public Config Config { get; init; } = new();
+
+        public Service Service { get; init; } = new();
     }
 
     internal record Config
@@ -15,5 +17,12 @@ namespace Cli
         public bool Exists { get; init; }
         
         public string File { get; init; } = string.Empty;
+    }
+
+    internal record Service
+    {
+        public const string Directory = "services";
+        
+        public string? CustomDirectory { get; init; }
     }
 }
