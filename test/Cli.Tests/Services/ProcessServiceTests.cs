@@ -76,5 +76,34 @@ namespace Cli.Tests.Services
             _processFactory.Verify(x => x.Create(It.Is<ProcessArguments>(
                 args => args.StartInfo != null && args.StartInfo.Arguments == expected)));
         }
+
+        [Fact]
+        public async Task StartStartsProcess()
+        {
+            await _service.StartAsync();
+            
+            _process.Verify(x => x.Start());
+        }
+
+        [Theory]
+        [InlineData(true, 0)]
+        [InlineData(false, 1)]
+        public async Task StartConvertsResult(bool returns, int expected)
+        {
+            _process.Setup(x => x.Start()).Returns(returns);
+            
+            var task = _service.StartAsync();
+
+            var result = await Assert.IsType<Task<int>>(task);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public async Task StartSetsStartedProcessId()
+        {
+            await _service.StartAsync();
+            
+            // TODO: How am I even gonna set it
+        }
     }
 }
