@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cli.Services
@@ -7,6 +8,6 @@ namespace Cli.Services
     {
         IReadOnlyList<ServiceEntry> Services { get; }
 
-        Task<IService> GetServiceAsync(ServiceEntry service);
+        Task<IService> GetServiceAsync(ServiceEntry service, CancellationToken cancellationToken = default);
     }
 }
