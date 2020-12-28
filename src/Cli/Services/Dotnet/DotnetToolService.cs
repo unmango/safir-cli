@@ -12,7 +12,7 @@ namespace Cli.Services.Dotnet
             IOptions<Config> config,
             ILogger<DotnetToolService> logger,
             IEnumerable<string> args)
-            : base(processFactory, config, logger, "tool", args)
+            : base(processFactory, config, logger, DotnetCommand.Tool, args)
         { }
     }
 }

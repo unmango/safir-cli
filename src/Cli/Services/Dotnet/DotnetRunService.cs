@@ -12,7 +12,7 @@ namespace Cli.Services.Dotnet
             IOptions<Config> config,
             ILogger<DotnetRunService> logger,
             IEnumerable<string> args)
-            : base(processFactory, config, logger, "run", args)
+            : base(processFactory, config, logger, DotnetCommand.Run, args)
         { }
     }
 }

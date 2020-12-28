@@ -12,9 +12,9 @@ namespace Cli.Services.Dotnet
             IProcessFactory processFactory,
             IOptions<Config> config,
             ILogger<DotnetService> logger,
-            object dotnetCommand,
+            DotnetCommand dotnetCommand,
             IEnumerable<string> args)
-            : base(processFactory, config, logger, dotnetCommand.ToString() ?? string.Empty, args)
+            : base(processFactory, config, logger, dotnetCommand.GetCommand(), args)
         { }
     }
 }
