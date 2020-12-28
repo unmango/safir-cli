@@ -10,31 +10,43 @@ namespace Cli.Services.Sources
     {
         public ValueTask<CanInitializeResult> CanInitializeAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var path = Environment.GetEnvironmentVariable("PATH");
+
+            var result = CanInitializeResult.Success;
+
+            if (!path?.Contains("git", StringComparison.OrdinalIgnoreCase) ?? false)
+                result = CanInitializeResult.Fail("`git` was not found on PATH");
+
+            return new ValueTask<CanInitializeResult>(result);
         }
 
-        public async Task InitializeAsync(string workingDirectory, CancellationToken cancellationToken = default)
+        public async Task InitializeAsync(
+            ServiceEntry service,
+            string workingDirectory,
+            CancellationToken cancellationToken = default)
         {
-            // Clone repo
-            var args = string.Join(' ', "clone", "TODO: url");
+            if (!Satisfies(service))
+                throw new NotSupportedException($"{GetType()} cannot initialize service {service.Name}");
+
+            var args = string.Join(' ', "clone", service.GitCloneUrl);
             await Command.RunAsync("git", args, workingDirectory, cancellationToken: cancellationToken);
-            
+
             throw new System.NotImplementedException();
+        }
+
+        public ValueTask<bool> IsInitializedAsync(
+            ServiceEntry service,
+            string workingDirectory,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         public bool Satisfies(ServiceEntry service)
         {
             if (service == null) throw new ArgumentNullException(nameof(service));
-            if (service.Source != ServiceSource.Git) return false;
-            
-            throw new System.NotImplementedException();
-        }
 
-        private static bool TryGetGitEntry(ServiceEntry service, [MaybeNullWhen(false)] out GitServiceEntry gitService)
-        {
-            gitService = service as GitServiceEntry;
-
-            return gitService != null;
+            return service.Source == ServiceSource.Git && !string.IsNullOrWhiteSpace(service.GitCloneUrl);
         }
     }
 }
