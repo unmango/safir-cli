@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Cli.Internal;
 using Cli.Services;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,10 @@ namespace Cli.Tests.Services
 {
     public class ProcessServiceTests
     {
+        private const string FileName = "file";
+        private static readonly string[]_args = { "arg1", "arg2" };
         private readonly Mock<IProcessFactory> _processFactory = new();
+        private readonly Mock<IProcess> _process = new();
         private readonly Mock<IOptions<Config>> _options = new();
         private readonly Mock<ILogger<ProcessService>> _logger = new();
 
@@ -19,13 +23,16 @@ namespace Cli.Tests.Services
         public ProcessServiceTests()
         {
             _options.SetupGet(x => x.Value).Returns(new Config());
+
+            _processFactory.Setup(x => x.Create(It.IsAny<ProcessArguments>()))
+                .Returns(_process.Object);
             
             _service = new ProcessService(
                 _processFactory.Object,
                 _options.Object,
                 _logger.Object,
-                string.Empty,
-                Array.Empty<string>());
+                FileName,
+                _args);
         }
 
         [Fact]
@@ -48,6 +55,26 @@ namespace Cli.Tests.Services
                 _logger.Object,
                 string.Empty,
                 Array.Empty<string>()));
+        }
+
+        [Fact]
+        public async Task StartSetsFileName()
+        {
+            await _service.StartAsync();
+            
+            _processFactory.Verify(x => x.Create(It.Is<ProcessArguments>(
+                args => args.StartInfo != null && args.StartInfo.FileName == FileName)));
+        }
+
+        [Fact]
+        public async Task StartSetsArguments()
+        {
+            const string expected = "arg1 arg2";
+            
+            await _service.StartAsync();
+            
+            _processFactory.Verify(x => x.Create(It.Is<ProcessArguments>(
+                args => args.StartInfo != null && args.StartInfo.Arguments == expected)));
         }
     }
 }
