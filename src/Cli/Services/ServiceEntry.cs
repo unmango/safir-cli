@@ -1,7 +1,4 @@
 namespace Cli.Services
 {
-    internal class ServiceEntry
-    {
-        
-    }
+    internal record ServiceEntry(string Name, ServiceSource Source);
 }
