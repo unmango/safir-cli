@@ -28,16 +28,8 @@ namespace Cli.Services
             if (source == null)
                 throw new NotSupportedException($"No service source found to support service {service.Name}");
 
-            var canInitialize = await source.CanInitializeAsync(cancellationToken);
-
-            if (canInitialize.Failed)
-                throw new NotSupportedException(
-                    $"Can't initialize source {source.GetType()}: {canInitialize.FailureMessage}");
-
             var workingDirectory = string.Empty; // TODO
-
-            if (!await source.IsInitializedAsync(service, workingDirectory, cancellationToken))
-                await source.InitializeAsync(service, workingDirectory, cancellationToken);
+            await source.TryInitializeAsync(service, workingDirectory, cancellationToken);
 
             return _factory.Create(service);
         }

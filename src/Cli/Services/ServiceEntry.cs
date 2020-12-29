@@ -7,5 +7,7 @@ namespace Cli.Services
         public ServiceSource Source { get; init; }
         
         public string? GitCloneUrl { get; init; }
+        
+        public ServiceType Type { get; init; }
     }
 }

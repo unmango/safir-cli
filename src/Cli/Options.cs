@@ -1,6 +1,9 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
+using System.Collections.Generic;
+using Cli.Services;
+
 namespace Cli
 {
     internal record Options
@@ -19,7 +22,7 @@ namespace Cli
         public string File { get; init; } = string.Empty;
     }
 
-    internal record Service
+    internal class Service : Dictionary<string, ServiceEntry>
     {
         public const string Directory = "services";
         
