@@ -15,13 +15,20 @@ namespace Cli.Tests.Middleware
     {
         private readonly Mock<IHelpBuilder> _help = new();
         
-        [Fact]
-        public async Task PrintsHelpWhenNoArguments()
+        public static readonly IEnumerable<object[]> SymbolTestData = new[] {
+            new object[] { new Argument("test") },
+            new object[] { new Option("-o") },
+        };
+        
+        [Theory]
+        [MemberData(nameof(SymbolTestData))]
+        public async Task PrintsHelpWhenSymbolAndNoArguments(Symbol symbol)
         {
             var flag = false;
             var root = new RootCommand {
                 Handler = CommandHandler.Create(() => flag = true)
             };
+            root.Add(symbol);
             var command = new CommandLineBuilder(root)
                 .UseHelpBuilder(_ => _help.Object)
                 .UseHelpForEmptyCommands()
@@ -33,13 +40,13 @@ namespace Cli.Tests.Middleware
             _help.Verify(x => x.Write(root));
         }
         
-        public static readonly IEnumerable<object[]> SymbolTestData = new[] {
+        public static readonly IEnumerable<object[]> SymbolWithCommandLineTestData = new[] {
             new object[] { new Argument("test"), "test" },
             new object[] { new Option("-o"), "-o" },
         };
 
         [Theory]
-        [MemberData(nameof(SymbolTestData))]
+        [MemberData(nameof(SymbolWithCommandLineTestData))]
         public async Task InvokesCommandWhenSymbolSupplied(Symbol symbol, string commandLine)
         {
             var flag = false;
@@ -53,6 +60,24 @@ namespace Cli.Tests.Middleware
                 .Build();
 
             await command.InvokeAsync(commandLine);
+            
+            Assert.True(flag);
+            _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task InvokesCommandWhenNoSymbolAndNoCommandLine()
+        {
+            var flag = false;
+            var root = new RootCommand {
+                Handler = CommandHandler.Create(() => flag = true),
+            };
+            var command = new CommandLineBuilder(root)
+                .UseHelpBuilder(_ => _help.Object)
+                .UseHelpForEmptyCommands()
+                .Build();
+
+            await command.InvokeAsync(string.Empty);
             
             Assert.True(flag);
             _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
