@@ -9,8 +9,6 @@ namespace Cli.Commands.Service
         public ListCommand() : base("list", "List services")
         {
             AddAlias("ls");
-            // TODO: Exempt from default "show help on empty command"
-            // I kinda see why that feature isn't in the framework by default
         }
 
         public sealed class ListHandler : ICommandHandler
