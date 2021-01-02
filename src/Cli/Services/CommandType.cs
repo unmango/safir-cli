@@ -5,7 +5,7 @@ namespace Cli.Services
         DotnetRun,
         DotnetTool,
         Process,
-        Docker,
+        DockerRun,
         Systemd,
     }
 }
