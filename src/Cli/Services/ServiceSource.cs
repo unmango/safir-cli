@@ -4,5 +4,6 @@ namespace Cli.Services
     {
         Git,
         DotnetTool,
+        LocalDirectory,
     }
 }
