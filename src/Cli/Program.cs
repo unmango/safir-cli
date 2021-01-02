@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
@@ -71,6 +71,7 @@ namespace Cli
 
         private static CommandLineBuilder CreateBuilder() => new CommandLineBuilder()
             .UseHelpForEmptyCommands()
+            .HandleOptionsValidation()
             .AddGlobalOption(_debugOption)
             .UseDefaults();
 
