@@ -2,6 +2,7 @@ using System;
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 
 namespace Cli.Middleware
@@ -14,11 +15,34 @@ namespace Cli.Middleware
                 {
                     await next(context);
                 }
-                catch (Exception e) when (e.InnerException is OptionsValidationException validationException)
+                catch (Exception e) when (Unwrap(e, out var validationException))
                 {
-                    var message = $"{validationException.OptionsType.Name}: {validationException.Message}";
-                    context.Console.Error.WriteLine(message);
+                    var error = context.Console.Error;
+                    error.WriteLine($"Options Validation Error: {validationException.OptionsType}");
+                    error.WriteLine($"\t{validationException.Message.Replace(";", Environment.NewLine)}");
                 }
             }, MiddlewareOrder.ExceptionHandler);
+
+        private static bool Unwrap(
+            Exception exception,
+            [MaybeNullWhen(false)] out OptionsValidationException validationException)
+        {
+            validationException = null;
+
+            while (true)
+            {
+                switch (exception.InnerException)
+                {
+                    case null:
+                        return false;
+                    case OptionsValidationException e:
+                        validationException = e;
+                        return true;
+                    default:
+                        exception = exception.InnerException;
+                        break;
+                }
+            }
+        }
     }
 }
