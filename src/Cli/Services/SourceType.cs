@@ -1,6 +1,6 @@
 namespace Cli.Services
 {
-    public enum ServiceSourceType
+    public enum SourceType
     {
         Git,
         DotnetTool,
