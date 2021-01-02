@@ -6,14 +6,14 @@ using Cli.Services;
 
 namespace Cli
 {
-    internal record Options
+    internal record CliOptions
     {
-        public Config Config { get; init; } = new();
+        public ConfigOptions Config { get; init; } = new();
 
-        public Service Services { get; init; } = new();
+        public ServiceOptions Services { get; init; } = new();
     }
 
-    internal record Config
+    internal record ConfigOptions
     {
         public string Directory { get; init; } = string.Empty;
 
@@ -22,7 +22,7 @@ namespace Cli
         public string File { get; init; } = string.Empty;
     }
 
-    internal class Service : Dictionary<string, ServiceEntry>
+    internal class ServiceOptions : Dictionary<string, ServiceEntry>
     {
         public const string DefaultInstallationDirectory = "services";
         

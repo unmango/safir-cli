@@ -18,10 +18,10 @@ namespace Cli.Commands.Service
 
         public sealed class ListHandler : ICommandHandler
         {
-            private readonly IOptions<Cli.Service> _options;
+            private readonly IOptions<Cli.ServiceOptions> _options;
             private readonly IConsole _console;
 
-            public ListHandler(IOptions<Cli.Service> options, IConsole console)
+            public ListHandler(IOptions<Cli.ServiceOptions> options, IConsole console)
             {
                 _options = options;
                 _console = console;
