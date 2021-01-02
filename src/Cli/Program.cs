@@ -44,10 +44,11 @@ namespace Cli
                 .ConfigureServices((context, services) => {
                     services.AddLogging();
                     services.AddOptions();
-                    
-                    services.Configure<Options>(context.Configuration);
-                    services.Configure<Config>(context.Configuration.GetSection("config"));
-                    services.Configure<Service>(context.Configuration.GetSection("services"));
+
+                    var config = context.Configuration;
+                    services.Configure<Options>(config);
+                    services.Configure<Config>(config.GetSection("config"));
+                    services.Configure<Service>(config.GetSection("services"));
                 })
                 .ConfigureLogging((context, builder) => {
                     var configDir = context.Configuration[ConfigDirectoryKey];
