@@ -1,9 +1,22 @@
 namespace Cli.Services
 {
-    public enum ServiceSource
+    // ReSharper disable once ClassNeverInstantiated.Global
+    internal record ServiceSource
     {
-        Git,
-        DotnetTool,
-        LocalDirectory,
+        public ServiceSourceType? Type { get; init; }
+        
+        public CommandType? Command { get; init; }
+        
+        public string? Name { get; init; }
+        
+        public int? Priority { get; init; }
+        
+        public string? GitCloneUrl { get; init; }
+        
+        public string? ExtraArgs { get; init; }
+        
+        public string? SourceDirectory { get; init; }
+        
+        public string? ProjectFile { get; init; }
     }
 }

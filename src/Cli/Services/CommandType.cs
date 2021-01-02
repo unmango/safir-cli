@@ -1,6 +1,6 @@
 namespace Cli.Services
 {
-    internal enum ServiceType
+    internal enum CommandType
     {
         DotnetRun,
         DotnetTool,
