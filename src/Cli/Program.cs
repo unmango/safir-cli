@@ -51,15 +51,14 @@ namespace Cli
                 })
                 .ConfigureLogging((context, builder) => {
                     var configDir = context.Configuration[ConfigDirectoryKey];
-                    var logDir = Path.Combine(configDir, "logs");
-                    var logFile = Path.Combine(logDir, "log.json");
+                    var logFile = Path.Combine(configDir, "logs", "log.json");
 
                     var configuration = new LoggerConfiguration()
                         .Enrich.FromLogContext()
                         .WriteTo.Async(x => x.File(new CompactJsonFormatter(), logFile));
 
                     if (context.Properties[typeof(InvocationContext)] is InvocationContext invocation
-                        && invocation.ParseResult.HasOption(_debugOption))
+                        && invocation.ParseResult.ValueForOption<bool>(_debugOption))
                     {
                         configuration.WriteTo.Console();
                     }
