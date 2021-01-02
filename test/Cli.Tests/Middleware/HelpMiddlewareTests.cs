@@ -14,12 +14,12 @@ namespace Cli.Tests.Middleware
     public class HelpMiddlewareTests
     {
         private readonly Mock<IHelpBuilder> _help = new();
-        
+
         public static readonly IEnumerable<object[]> SymbolTestData = new[] {
             new object[] { new Argument("test") },
             new object[] { new Option("-o") },
         };
-        
+
         [Theory]
         [MemberData(nameof(SymbolTestData))]
         public async Task PrintsHelpWhenSymbolAndNoArguments(Symbol symbol)
@@ -35,11 +35,11 @@ namespace Cli.Tests.Middleware
                 .Build();
 
             await command.InvokeAsync(string.Empty);
-            
+
             Assert.False(flag);
             _help.Verify(x => x.Write(root));
         }
-        
+
         public static readonly IEnumerable<object[]> SymbolWithCommandLineTestData = new[] {
             new object[] { new Argument("test"), "test" },
             new object[] { new Option("-o"), "-o" },
@@ -60,7 +60,7 @@ namespace Cli.Tests.Middleware
                 .Build();
 
             await command.InvokeAsync(commandLine);
-            
+
             Assert.True(flag);
             _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
         }
@@ -78,7 +78,7 @@ namespace Cli.Tests.Middleware
                 .Build();
 
             await command.InvokeAsync(string.Empty);
-            
+
             Assert.True(flag);
             _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
         }
@@ -97,7 +97,7 @@ namespace Cli.Tests.Middleware
                 .Build();
 
             await command.InvokeAsync(string.Empty);
-            
+
             Assert.True(flag);
             _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
         }
@@ -106,10 +106,10 @@ namespace Cli.Tests.Middleware
         public async Task InvokesSubCommandWhenNoSymbolAndNoCommandLineWithGlobalOptions()
         {
             var flag = false;
-            var root = new RootCommand {
+            var root = new RootCommand();
+            root.AddCommand(new Command("sub") {
                 Handler = CommandHandler.Create(() => flag = true),
-            };
-            root.AddCommand(new Command("sub"));
+            });
             var command = new CommandLineBuilder(root)
                 .AddGlobalOption(new Option("--global"))
                 .UseHelpBuilder(_ => _help.Object)
@@ -117,7 +117,7 @@ namespace Cli.Tests.Middleware
                 .Build();
 
             await command.InvokeAsync("sub");
-            
+
             Assert.True(flag);
             _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
         }
