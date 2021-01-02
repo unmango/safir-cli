@@ -101,5 +101,25 @@ namespace Cli.Tests.Middleware
             Assert.True(flag);
             _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
         }
+
+        [Fact]
+        public async Task InvokesSubCommandWhenNoSymbolAndNoCommandLineWithGlobalOptions()
+        {
+            var flag = false;
+            var root = new RootCommand {
+                Handler = CommandHandler.Create(() => flag = true),
+            };
+            root.AddCommand(new Command("sub"));
+            var command = new CommandLineBuilder(root)
+                .AddGlobalOption(new Option("--global"))
+                .UseHelpBuilder(_ => _help.Object)
+                .UseHelpForEmptyCommands()
+                .Build();
+
+            await command.InvokeAsync("sub");
+            
+            Assert.True(flag);
+            _help.Verify(x => x.Write(It.IsAny<ICommand>()), Times.Never);
+        }
     }
 }
