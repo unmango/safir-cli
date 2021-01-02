@@ -11,7 +11,7 @@ namespace Cli.Services
         
         public int? Priority { get; init; }
         
-        public string? GitCloneUrl { get; init; }
+        public string? CloneUrl { get; init; }
         
         public string? ExtraArgs { get; init; }
         

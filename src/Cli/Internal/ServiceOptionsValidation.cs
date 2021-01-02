@@ -45,7 +45,7 @@ namespace Cli.Internal
 
             private static ValidateOptionsResult ValidateGit(ServiceSource source)
                 => Errors(
-                    (!string.IsNullOrWhiteSpace(source.GitCloneUrl), "GitCloneUrl is required"),
+                    (!string.IsNullOrWhiteSpace(source.CloneUrl), "GitCloneUrl is required"),
                     (
                         source.Command != null &&
                         SupportedCommands(source.Type!.Value).Contains(source.Command.Value),
