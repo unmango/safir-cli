@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Help;
@@ -11,9 +12,10 @@ namespace Cli.Middleware
     {
         public static CommandLineBuilder UseHelpForEmptyCommands(this CommandLineBuilder builder) =>
             builder.UseMiddleware((context, next) => {
+                var globalOptions = ((Command)context.ParseResult.RootCommandResult.Command).GlobalOptions;
                 var commandResult = context.ParseResult.CommandResult;
                 
-                if (HasChildrenDefined(commandResult.Command) &&
+                if (HasChildrenDefined(commandResult.Command, globalOptions) &&
                     !WasPassedChildren(commandResult))
                 {
                     return CommandHandler.Create((IHelpBuilder help) => {
@@ -24,16 +26,9 @@ namespace Cli.Middleware
                 return next(context);
             });
 
-        private static bool HasChildrenDefined(ISymbol command)
+        private static bool HasChildrenDefined(ISymbol command, IEnumerable<IOption> globalOptions)
         {
-            var children = command.Children.AsEnumerable();
-
-            if (command is Command concrete)
-            {
-                children = children.Except(concrete.GlobalOptions);
-            }
-
-            return children.Any();
+            return command.Children.Except(globalOptions).Any();
         }
 
         private static bool WasPassedChildren(SymbolResult result)
