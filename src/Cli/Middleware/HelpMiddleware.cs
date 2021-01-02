@@ -1,6 +1,9 @@
+using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Help;
 using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
+using System.Linq;
 
 namespace Cli.Middleware
 {
@@ -8,15 +11,34 @@ namespace Cli.Middleware
     {
         public static CommandLineBuilder UseHelpForEmptyCommands(this CommandLineBuilder builder) =>
             builder.UseMiddleware((context, next) => {
-                if (context.ParseResult.CommandResult.Command.Children.Count == 0 ||
-                    context.ParseResult.CommandResult.Children.Count > 0)
+                var commandResult = context.ParseResult.CommandResult;
+                
+                if (HasChildrenDefined(commandResult.Command) &&
+                    !WasPassedChildren(commandResult))
                 {
-                    return next(context);
+                    return CommandHandler.Create((IHelpBuilder help) => {
+                        help.Write(commandResult.Command);
+                    }).InvokeAsync(context);
                 }
 
-                return CommandHandler.Create((IHelpBuilder help) => {
-                    help.Write(context.ParseResult.CommandResult.Command);
-                }).InvokeAsync(context);
+                return next(context);
             });
+
+        private static bool HasChildrenDefined(ISymbol command)
+        {
+            var children = command.Children.AsEnumerable();
+
+            if (command is Command concrete)
+            {
+                children = children.Except(concrete.GlobalOptions);
+            }
+
+            return children.Any();
+        }
+
+        private static bool WasPassedChildren(SymbolResult result)
+        {
+            return result.Children.Count > 0;
+        }
     }
 }
