@@ -24,8 +24,10 @@ namespace Cli
 
     internal class Service : Dictionary<string, ServiceEntry>
     {
-        public const string Directory = "services";
+        public const string DefaultInstallationDirectory = "services";
         
-        public string? CustomDirectory { get; init; }
+        public string? CustomInstallationDirectory { get; init; }
+
+        public string InstallationDirectory => CustomInstallationDirectory ?? DefaultInstallationDirectory;
     }
 }
