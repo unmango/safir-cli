@@ -17,6 +17,7 @@ namespace Cli.Commands.Service
             AddAlias("ls");
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Global
         public sealed class ListHandler : ICommandHandler
         {
             private readonly IOptions<Cli.ServiceOptions> _options;
