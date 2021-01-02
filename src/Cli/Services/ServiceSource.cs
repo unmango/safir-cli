@@ -13,6 +13,8 @@ namespace Cli.Services
         
         public string? CloneUrl { get; init; }
         
+        public string? ToolName { get; init; }
+        
         public string? ExtraArgs { get; init; }
         
         public string? SourceDirectory { get; init; }
