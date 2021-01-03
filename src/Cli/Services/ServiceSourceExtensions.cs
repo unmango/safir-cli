@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cli.Services.Installers;
 
 namespace Cli.Services
@@ -37,6 +39,31 @@ namespace Cli.Services
             if (source.Type != SourceType.LocalDirectory) throw new ArgumentException("Invalid SourceType");
 
             return NoOpInstaller.Value;
+        }
+
+        public static IEnumerable<ServiceSource> OrderByPriority(this IEnumerable<ServiceSource> sources)
+        {
+            return sources.OrderBy(x => x.Priority);
+        }
+
+        public static ServiceSource HighestPriority(
+            this IEnumerable<ServiceSource> sources,
+            Func<ServiceSource, bool>? predicate = null)
+        {
+            var ordered = sources.OrderByPriority();
+            return predicate == null
+                ? ordered.First()
+                : ordered.First(predicate);
+        }
+
+        public static ServiceSource? HighestPriorityOrDefault(
+            this IEnumerable<ServiceSource> sources,
+            Func<ServiceSource, bool>? predicate = null)
+        {
+            var ordered = sources.OrderByPriority();
+            return predicate == null
+                ? ordered.FirstOrDefault()
+                : ordered.FirstOrDefault(predicate);
         }
     }
 }

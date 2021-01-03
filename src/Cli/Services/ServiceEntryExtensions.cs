@@ -6,22 +6,23 @@ namespace Cli.Services
     {
         public static IServiceInstaller GetInstaller(this ServiceEntry service)
         {
-            return service.Sources.OrderBy(x => x.Priority).Single().GetInstaller();
+            return service.Sources.OrderByPriority().Single().GetInstaller();
         }
 
         public static IServiceInstaller? GetGitInstaller(this ServiceEntry service)
         {
-            return service.Sources.FirstOrDefault(x => x.Type == SourceType.Git)?.GetGitInstaller();
+            return service.Sources.HighestPriorityOrDefault(x => x.Type == SourceType.Git)?.GetGitInstaller();
         }
 
         public static IServiceInstaller? GetDotnetToolInstaller(this ServiceEntry service)
         {
-            return service.Sources.FirstOrDefault(x => x.Type == SourceType.DotnetTool)?.GetDotnetToolInstaller();
+            return service.Sources.HighestPriorityOrDefault(x => x.Type == SourceType.DotnetTool)
+                ?.GetDotnetToolInstaller();
         }
 
         public static IServiceInstaller? GetLocalDirectoryInstaller(this ServiceEntry service)
         {
-            return service.Sources.FirstOrDefault(x => x.Type == SourceType.LocalDirectory)
+            return service.Sources.HighestPriorityOrDefault(x => x.Type == SourceType.LocalDirectory)
                 ?.GetLocalDirectoryInstaller();
         }
     }
