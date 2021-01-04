@@ -12,38 +12,38 @@ namespace Cli.Services
                 SourceType.Git => GetGitInstaller(source),
                 SourceType.DotnetTool => GetDotnetToolInstaller(source),
                 SourceType.LocalDirectory => GetLocalDirectoryInstaller(source),
-                null => throw new NotSupportedException("SourceType must be set to retrieve installer"),
+                null => throw new InvalidOperationException("SourceType must be set to retrieve installer"),
                 _ => throw new NotSupportedException("SourceType is not supported")
             };
 
         public static IServiceInstaller GetGitInstaller(this ServiceSource source)
         {
-            if (source.Type != SourceType.Git) throw new ArgumentException("Invalid SourceType");
+            if (source.Type != SourceType.Git) throw new InvalidOperationException("Invalid SourceType");
             if (string.IsNullOrWhiteSpace(source.CloneUrl))
-                throw new NotSupportedException("GitCloneUrl must have a value");
+                throw new InvalidOperationException("GitCloneUrl must have a value");
 
             return new GitInstaller(source.CloneUrl);
         }
 
         public static IServiceInstaller GetDotnetToolInstaller(this ServiceSource source)
         {
-            if (source.Type != SourceType.DotnetTool) throw new ArgumentException("Invalid SourceType");
+            if (source.Type != SourceType.DotnetTool) throw new InvalidOperationException("Invalid SourceType");
             if (string.IsNullOrWhiteSpace(source.ToolName))
-                throw new NotSupportedException("ToolName must have a value");
+                throw new InvalidOperationException("ToolName must have a value");
 
             return new DotnetToolInstaller(source.ToolName, source.ExtraArgs);
         }
 
         public static IServiceInstaller GetLocalDirectoryInstaller(this ServiceSource source)
         {
-            if (source.Type != SourceType.LocalDirectory) throw new ArgumentException("Invalid SourceType");
+            if (source.Type != SourceType.LocalDirectory) throw new InvalidOperationException("Invalid SourceType");
 
             return NoOpInstaller.Value;
         }
 
         public static IEnumerable<ServiceSource> OrderByPriority(this IEnumerable<ServiceSource> sources)
         {
-            return sources.OrderBy(x => x.Priority);
+            return sources.OrderByDescending(x => x.Priority.HasValue).ThenBy(x => x.Priority);
         }
 
         public static ServiceSource HighestPriority(
