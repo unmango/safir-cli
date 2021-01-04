@@ -9,17 +9,34 @@ namespace Cli.Tests.Services
 {
     public class ServiceSourceExtensionsTests
     {
-        [Fact]
-        public void GetInstaller_GetsDockerInstaller()
+        [Theory]
+        [InlineData(SourceType.Docker)]
+        [InlineData(SourceType.DockerImage)]
+        public void GetInstaller_GetsDockerImageInstaller(SourceType type)
         {
             var source = new ServiceSource {
-                Type = SourceType.Docker,
+                Type = type,
                 ImageName = "image",
             };
 
             var result = source.GetInstaller();
 
             Assert.IsType<DockerImageInstaller>(result);
+        }
+        
+        [Theory]
+        [InlineData(SourceType.Docker)]
+        [InlineData(SourceType.DockerBuild)]
+        public void GetInstaller_GetsDockerBuildInstaller(SourceType type)
+        {
+            var source = new ServiceSource {
+                Type = type,
+                BuildContext = "context",
+            };
+
+            var result = source.GetInstaller();
+
+            Assert.IsType<DockerBuildInstaller>(result);
         }
         
         [Fact]
@@ -83,24 +100,21 @@ namespace Cli.Tests.Services
             Assert.Throws<InvalidOperationException>(() => source.GetDockerInstaller());
         }
 
-        [Theory]
-        [InlineData((string?)null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData("\t")]
-        [InlineData("\n")]
-        public void GetDockerInstaller_RequiresImageName(string? imageName)
+        [Fact]
+        public void GetDockerInstaller_InfersDockerBuildInstaller()
         {
             var source = new ServiceSource {
                 Type = SourceType.Docker,
-                ImageName = imageName,
+                BuildContext = "context",
             };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDockerInstaller());
+            var result = source.GetDockerInstaller();
+
+            Assert.IsType<DockerBuildInstaller>(result);
         }
 
         [Fact]
-        public void GetDockerInstaller_GetsDockerInstaller()
+        public void GetDockerInstaller_InfersDockerImageInstaller()
         {
             var source = new ServiceSource {
                 Type = SourceType.Docker,
@@ -108,6 +122,74 @@ namespace Cli.Tests.Services
             };
 
             var result = source.GetDockerInstaller();
+
+            Assert.IsType<DockerImageInstaller>(result);
+        }
+        
+        [Theory]
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.DockerBuild)]
+        public void GetDockerBuildInstaller_RequiresDockerBuildSourceType(SourceType type)
+        {
+            var source = new ServiceSource { Type = type };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetDockerBuildInstaller());
+        }
+
+        [Theory]
+        [MemberData(nameof(NullOrWhitespaceStrings))]
+        public void GetDockerBuildInstaller_RequiresBuildContext(string? buildContext)
+        {
+            var source = new ServiceSource {
+                Type = SourceType.DockerBuild,
+                BuildContext = buildContext,
+            };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetDockerBuildInstaller());
+        }
+
+        [Fact]
+        public void GetDockerBuildInstaller_GetsDockerBuildInstaller()
+        {
+            var source = new ServiceSource {
+                Type = SourceType.DockerBuild,
+                BuildContext = "context",
+            };
+
+            var result = source.GetDockerBuildInstaller();
+
+            Assert.IsType<DockerBuildInstaller>(result);
+        }
+        
+        [Theory]
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.DockerImage)]
+        public void GetDockerImageInstaller_RequiresDockerBuildSourceType(SourceType type)
+        {
+            var source = new ServiceSource { Type = type };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetDockerImageInstaller());
+        }
+
+        [Theory]
+        [MemberData(nameof(NullOrWhitespaceStrings))]
+        public void GetDockerImageInstaller_RequiresImageName(string? imageName)
+        {
+            var source = new ServiceSource {
+                Type = SourceType.DockerImage,
+                ImageName = imageName,
+            };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetDockerImageInstaller());
+        }
+
+        [Fact]
+        public void GetDockerImageInstaller_GetsDockerImageInstaller()
+        {
+            var source = new ServiceSource {
+                Type = SourceType.DockerImage,
+                ImageName = "image",
+            };
+
+            var result = source.GetDockerImageInstaller();
 
             Assert.IsType<DockerImageInstaller>(result);
         }
@@ -122,11 +204,7 @@ namespace Cli.Tests.Services
         }
 
         [Theory]
-        [InlineData((string?)null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData("\t")]
-        [InlineData("\n")]
+        [MemberData(nameof(NullOrWhitespaceStrings))]
         public void GetGitInstaller_RequiresCloneUrl(string? cloneUrl)
         {
             var source = new ServiceSource {
@@ -160,11 +238,7 @@ namespace Cli.Tests.Services
         }
 
         [Theory]
-        [InlineData((string?)null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData("\t")]
-        [InlineData("\n")]
+        [MemberData(nameof(NullOrWhitespaceStrings))]
         public void GetDotnetToolInstaller_RequiresToolName(string? toolName)
         {
             var source = new ServiceSource {
@@ -334,12 +408,107 @@ namespace Cli.Tests.Services
             Assert.Null(highest);
         }
 
+        [Fact]
+        public void InferSourceType_ReturnsTypeWhenSet()
+        {
+            const SourceType expected = (SourceType)69;
+            var source = new ServiceSource { Type = expected };
+
+            var inferred = source.InferSourceType();
+            
+            Assert.Equal(expected, inferred);
+        }
+
+        [Fact]
+        public void InferSourceType_InfersDockerBuild()
+        {
+            const SourceType expected = SourceType.DockerBuild;
+            var source = new ServiceSource { BuildContext = "context" };
+
+            var inferred = source.InferSourceType();
+            
+            Assert.Equal(expected, inferred);
+        }
+
+        [Fact]
+        public void InferSourceType_InfersDockerImage()
+        {
+            const SourceType expected = SourceType.DockerImage;
+            var source = new ServiceSource { ImageName = "image" };
+
+            var inferred = source.InferSourceType();
+            
+            Assert.Equal(expected, inferred);
+        }
+
+        [Fact]
+        public void InferSourceType_InfersGit()
+        {
+            const SourceType expected = SourceType.Git;
+            var source = new ServiceSource { CloneUrl = "url" };
+
+            var inferred = source.InferSourceType();
+            
+            Assert.Equal(expected, inferred);
+        }
+
+        [Fact]
+        public void InferSourceType_ReturnsNullWhenUnableToInfer()
+        {
+            var inferred = new ServiceSource().InferSourceType();
+            
+            Assert.Null(inferred);
+        }
+
+        [Fact]
+        public void InferSourceType_SetsTypeOnOutParameter()
+        {
+            const SourceType expected = SourceType.Git;
+            var source = new ServiceSource { CloneUrl = "url" };
+
+            _ = source.InferSourceType(out var updated);
+            
+            Assert.Equal(expected, updated.Type);
+            Assert.NotEqual(source, updated);
+        }
+
+        [Fact]
+        public void TryInferSourceType_ReturnsTrueWhenSourceWasInferred()
+        {
+            const SourceType expected = SourceType.Git;
+            var source = new ServiceSource { CloneUrl = "url" };
+
+            var result = source.TryInferSourceType(out var inferred);
+            
+            Assert.True(result);
+            Assert.Equal(expected, inferred);
+        }
+
+        [Fact]
+        public void TryInferSourceType_ReturnsNullWhenUnableToInfer()
+        {
+            var result = new ServiceSource().TryInferSourceType(out var inferred);
+            
+            Assert.False(result);
+        }
+
         private static IEnumerable<object[]> SourceTypeValuesExcept(SourceType type)
         {
             return Enum.GetValues<SourceType>()
                 .Except(new[] { type })
                 .Concat(new[] { (SourceType)69 })
                 .Select(x => new object[] { x });
+        }
+
+        private static IEnumerable<object[]> NullOrWhitespaceStrings()
+        {
+            return new[] {
+                null,
+                "",
+                " ",
+                "\t",
+                "\n",
+            }.Select(x => new object[] { x });
         }
     }
 }

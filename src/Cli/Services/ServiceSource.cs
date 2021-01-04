@@ -24,5 +24,7 @@ namespace Cli.Services
         public string? ImageName { get; init; }
         
         public string? Tag { get; init; }
+        
+        public string? BuildContext { get; init; }
     }
 }
