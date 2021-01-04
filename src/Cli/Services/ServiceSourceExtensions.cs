@@ -9,20 +9,21 @@ namespace Cli.Services
     {
         public static IServiceInstaller GetInstaller(this ServiceSource source)
             => source.Type switch {
-                SourceType.Git => GetGitInstaller(source),
+                SourceType.Docker => GetDockerInstaller(source),
                 SourceType.DotnetTool => GetDotnetToolInstaller(source),
+                SourceType.Git => GetGitInstaller(source),
                 SourceType.LocalDirectory => GetLocalDirectoryInstaller(source),
                 null => throw new InvalidOperationException("SourceType must be set to retrieve installer"),
                 _ => throw new NotSupportedException("SourceType is not supported")
             };
 
-        public static IServiceInstaller GetGitInstaller(this ServiceSource source)
+        public static IServiceInstaller GetDockerInstaller(this ServiceSource source)
         {
-            if (source.Type != SourceType.Git) throw new InvalidOperationException("Invalid SourceType");
-            if (string.IsNullOrWhiteSpace(source.CloneUrl))
-                throw new InvalidOperationException("GitCloneUrl must have a value");
+            if (source.Type != SourceType.Docker) throw new InvalidOperationException("Invalid SourceType");
+            if (string.IsNullOrWhiteSpace(source.ImageName))
+                throw new InvalidOperationException("ImageName must have a value");
 
-            return new GitInstaller(source.CloneUrl);
+            return new DockerImageInstaller(source.ImageName, source.Tag);
         }
 
         public static IServiceInstaller GetDotnetToolInstaller(this ServiceSource source)
@@ -32,6 +33,15 @@ namespace Cli.Services
                 throw new InvalidOperationException("ToolName must have a value");
 
             return new DotnetToolInstaller(source.ToolName, source.ExtraArgs);
+        }
+
+        public static IServiceInstaller GetGitInstaller(this ServiceSource source)
+        {
+            if (source.Type != SourceType.Git) throw new InvalidOperationException("Invalid SourceType");
+            if (string.IsNullOrWhiteSpace(source.CloneUrl))
+                throw new InvalidOperationException("GitCloneUrl must have a value");
+
+            return new GitInstaller(source.CloneUrl);
         }
 
         public static IServiceInstaller GetLocalDirectoryInstaller(this ServiceSource source)

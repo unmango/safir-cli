@@ -2,8 +2,9 @@ namespace Cli.Services
 {
     public enum SourceType
     {
-        Git,
+        Docker,
         DotnetTool,
+        Git,
         LocalDirectory,
     }
 }

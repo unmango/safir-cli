@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cli.Services;
 using Cli.Services.Installers;
 using Xunit;
@@ -7,6 +9,19 @@ namespace Cli.Tests.Services
 {
     public class ServiceSourceExtensionsTests
     {
+        [Fact]
+        public void GetInstaller_GetsDockerInstaller()
+        {
+            var source = new ServiceSource {
+                Type = SourceType.Docker,
+                ImageName = "image",
+            };
+
+            var result = source.GetInstaller();
+
+            Assert.IsType<DockerImageInstaller>(result);
+        }
+        
         [Fact]
         public void GetInstaller_GetsGitInstaller()
         {
@@ -60,9 +75,45 @@ namespace Cli.Tests.Services
         }
 
         [Theory]
-        [InlineData(SourceType.DotnetTool)]
-        [InlineData(SourceType.LocalDirectory)]
-        [InlineData((SourceType)69)]
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.Docker)]
+        public void GetDockerInstaller_RequiresDockerSourceType(SourceType type)
+        {
+            var source = new ServiceSource { Type = type };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetDockerInstaller());
+        }
+
+        [Theory]
+        [InlineData((string?)null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("\t")]
+        [InlineData("\n")]
+        public void GetDockerInstaller_RequiresImageName(string? imageName)
+        {
+            var source = new ServiceSource {
+                Type = SourceType.Docker,
+                ImageName = imageName,
+            };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetDockerInstaller());
+        }
+
+        [Fact]
+        public void GetDockerInstaller_GetsDockerInstaller()
+        {
+            var source = new ServiceSource {
+                Type = SourceType.Docker,
+                ImageName = "image",
+            };
+
+            var result = source.GetDockerInstaller();
+
+            Assert.IsType<DockerImageInstaller>(result);
+        }
+
+        [Theory]
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.Git)]
         public void GetGitInstaller_RequiresGitSourceType(SourceType type)
         {
             var source = new ServiceSource { Type = type };
@@ -100,10 +151,8 @@ namespace Cli.Tests.Services
         }
 
         [Theory]
-        [InlineData(SourceType.Git)]
-        [InlineData(SourceType.LocalDirectory)]
-        [InlineData((SourceType)69)]
-        public void GetDotnetToolInstaller_RequiresGitSourceType(SourceType type)
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.DotnetTool)]
+        public void GetDotnetToolInstaller_RequiresDotnetToolSourceType(SourceType type)
         {
             var source = new ServiceSource { Type = type };
 
@@ -137,6 +186,15 @@ namespace Cli.Tests.Services
             var result = source.GetDotnetToolInstaller();
 
             Assert.IsType<DotnetToolInstaller>(result);
+        }
+
+        [Theory]
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.LocalDirectory)]
+        public void GetLocalDirectoryInstaller_RequiresLocalDirectorySourceType(SourceType type)
+        {
+            var source = new ServiceSource { Type = type };
+
+            Assert.Throws<InvalidOperationException>(() => source.GetLocalDirectoryInstaller());
         }
 
         [Fact]
@@ -274,6 +332,14 @@ namespace Cli.Tests.Services
             var highest = sources.HighestPriorityOrDefault(x => !string.IsNullOrWhiteSpace(x.CloneUrl));
             
             Assert.Null(highest);
+        }
+
+        private static IEnumerable<object[]> SourceTypeValuesExcept(SourceType type)
+        {
+            return Enum.GetValues<SourceType>()
+                .Except(new[] { type })
+                .Concat(new[] { (SourceType)69 })
+                .Select(x => new object[] { x });
         }
     }
 }

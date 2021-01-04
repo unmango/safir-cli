@@ -20,5 +20,9 @@ namespace Cli.Services
         public string? SourceDirectory { get; init; }
         
         public string? ProjectFile { get; init; }
+        
+        public string? ImageName { get; init; }
+        
+        public string? Tag { get; init; }
     }
 }
