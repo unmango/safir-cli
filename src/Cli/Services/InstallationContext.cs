@@ -15,5 +15,7 @@ namespace Cli.Services
         
         public IImmutableDictionary<object, object> Properties { get; init; } =
             ImmutableDictionary<object, object>.Empty;
+        
+        public string InstallationDirectory { get; init; }
     }
 }
