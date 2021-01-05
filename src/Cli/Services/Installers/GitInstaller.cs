@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cli.Services.Installers.Vcs;
 using Cli.Services.Sources;
 using LibGit2Sharp;
 
@@ -13,11 +14,11 @@ namespace Cli.Services.Installers
     {
         private readonly CloneOptions _options = new();
         private readonly string? _cloneUrl;
-        private readonly IRepository _repository;
+        private readonly IRepositoryFunctions _repository;
 
         public GitInstaller() { }
         
-        public GitInstaller(string cloneUrl, IRepository repository)
+        public GitInstaller(string cloneUrl, IRepositoryFunctions repository)
         {
             _cloneUrl = cloneUrl;
             _repository = repository;
@@ -30,8 +31,8 @@ namespace Cli.Services.Installers
 
         public override ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
         {
-            if (!Repository.IsValid(context.InstallationDirectory))
-                Repository.Clone(_cloneUrl, context.InstallationDirectory);
+            if (!_repository.IsValid(context.InstallationDirectory))
+                _repository.Clone(_cloneUrl, context.InstallationDirectory, _options);
             
             return ValueTask.CompletedTask;
         }
