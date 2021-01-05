@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Cli.Services.Installers;
 
@@ -7,7 +8,8 @@ namespace Cli.Services
     {
         public static IServiceInstaller GetInstaller(this ServiceEntry service)
         {
-            return service.Sources.OrderByPriority().Single().GetInstaller();
+            // return service.Sources.OrderByPriority().Single().GetInstaller();
+            throw new NotImplementedException();
         }
 
         public static IServiceInstaller? GetGitInstaller(this ServiceEntry service)
