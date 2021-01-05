@@ -9,13 +9,20 @@ namespace Cli.Tests.Services.Installers
 {
     public class DefaultServiceInstallerFactoryTests
     {
+        private readonly DefaultServiceInstallerFactory _factory;
+        
+        public DefaultServiceInstallerFactoryTests()
+        {
+            _factory = new DefaultServiceInstallerFactory();
+        }
+        
         [Theory]
         [MemberData(nameof(SourceTypeValuesExcept), SourceType.DockerBuild)]
         public void GetDockerBuildInstaller_RequiresDockerBuildSourceType(SourceType type)
         {
             var source = new ServiceSource { Type = type };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDockerBuildInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetDockerBuildInstaller(source));
         }
 
         [Theory]
@@ -27,7 +34,7 @@ namespace Cli.Tests.Services.Installers
                 BuildContext = buildContext,
             };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDockerBuildInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetDockerBuildInstaller(source));
         }
 
         [Fact]
@@ -38,7 +45,7 @@ namespace Cli.Tests.Services.Installers
                 BuildContext = "context",
             };
 
-            var result = source.GetDockerBuildInstaller();
+            var result = _factory.GetDockerBuildInstaller(source);
 
             Assert.IsType<DockerBuildInstaller>(result);
         }
@@ -49,7 +56,7 @@ namespace Cli.Tests.Services.Installers
         {
             var source = new ServiceSource { Type = type };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDockerImageInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetDockerImageInstaller(source));
         }
 
         [Theory]
@@ -61,7 +68,7 @@ namespace Cli.Tests.Services.Installers
                 ImageName = imageName,
             };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDockerImageInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetDockerImageInstaller(source));
         }
 
         [Fact]
@@ -72,7 +79,7 @@ namespace Cli.Tests.Services.Installers
                 ImageName = "image",
             };
 
-            var result = source.GetDockerImageInstaller();
+            var result = _factory.GetDockerImageInstaller(source);
 
             Assert.IsType<DockerImageInstaller>(result);
         }
@@ -83,7 +90,7 @@ namespace Cli.Tests.Services.Installers
         {
             var source = new ServiceSource { Type = type };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetGitInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetGitInstaller(source));
         }
 
         [Theory]
@@ -95,7 +102,7 @@ namespace Cli.Tests.Services.Installers
                 CloneUrl = cloneUrl,
             };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetGitInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetGitInstaller(source));
         }
 
         [Fact]
@@ -106,7 +113,7 @@ namespace Cli.Tests.Services.Installers
                 CloneUrl = "a url",
             };
 
-            var result = source.GetGitInstaller();
+            var result = _factory.GetGitInstaller(source);
 
             Assert.IsType<GitInstaller>(result);
         }
@@ -117,7 +124,7 @@ namespace Cli.Tests.Services.Installers
         {
             var source = new ServiceSource { Type = type };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDotnetToolInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetDotnetToolInstaller(source));
         }
 
         [Theory]
@@ -129,7 +136,7 @@ namespace Cli.Tests.Services.Installers
                 ToolName = toolName,
             };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetDotnetToolInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetDotnetToolInstaller(source));
         }
 
         [Fact]
@@ -140,7 +147,7 @@ namespace Cli.Tests.Services.Installers
                 ToolName = "name",
             };
 
-            var result = source.GetDotnetToolInstaller();
+            var result = _factory.GetDotnetToolInstaller(source);
 
             Assert.IsType<DotnetToolInstaller>(result);
         }
@@ -151,7 +158,7 @@ namespace Cli.Tests.Services.Installers
         {
             var source = new ServiceSource { Type = type };
 
-            Assert.Throws<InvalidOperationException>(() => source.GetLocalDirectoryInstaller());
+            Assert.Throws<InvalidOperationException>(() => _factory.GetLocalDirectoryInstaller(source));
         }
 
         [Fact]
@@ -159,7 +166,7 @@ namespace Cli.Tests.Services.Installers
         {
             var source = new ServiceSource { Type = SourceType.LocalDirectory };
 
-            var result = source.GetLocalDirectoryInstaller();
+            var result = _factory.GetLocalDirectoryInstaller(source);
 
             Assert.IsType<NoOpInstaller>(result);
         }

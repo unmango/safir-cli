@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Cli.Services.Installers
 {
-    internal static class DefaultServiceInstallerFactory
+    internal class DefaultServiceInstallerFactory : IServiceInstallerFactory
     {
-        public static IServiceInstaller GetDockerBuildInstaller(this ServiceSource source)
+        public IServiceInstaller GetDockerBuildInstaller(ServiceSource source)
         {
             if (source.Type != SourceType.DockerBuild) throw new InvalidOperationException("Invalid SourceType");
             if (string.IsNullOrWhiteSpace(source.BuildContext))
@@ -15,7 +13,7 @@ namespace Cli.Services.Installers
             return new DockerBuildInstaller(source.BuildContext, source.Tag);
         }
 
-        public static IServiceInstaller GetDockerImageInstaller(this ServiceSource source)
+        public IServiceInstaller GetDockerImageInstaller(ServiceSource source)
         {
             if (source.Type != SourceType.DockerImage) throw new InvalidOperationException("Invalid SourceType");
             if (string.IsNullOrWhiteSpace(source.ImageName))
@@ -24,7 +22,7 @@ namespace Cli.Services.Installers
             return new DockerImageInstaller(source.ImageName, source.Tag);
         }
 
-        public static IServiceInstaller GetDotnetToolInstaller(this ServiceSource source)
+        public IServiceInstaller GetDotnetToolInstaller(ServiceSource source)
         {
             if (source.Type != SourceType.DotnetTool) throw new InvalidOperationException("Invalid SourceType");
             if (string.IsNullOrWhiteSpace(source.ToolName))
@@ -33,7 +31,7 @@ namespace Cli.Services.Installers
             return new DotnetToolInstaller(source.ToolName, source.ExtraArgs);
         }
 
-        public static IServiceInstaller GetGitInstaller(this ServiceSource source)
+        public IServiceInstaller GetGitInstaller(ServiceSource source)
         {
             if (source.Type != SourceType.Git) throw new InvalidOperationException("Invalid SourceType");
             if (string.IsNullOrWhiteSpace(source.CloneUrl))
@@ -42,7 +40,7 @@ namespace Cli.Services.Installers
             return new GitInstaller(source.CloneUrl);
         }
 
-        public static IServiceInstaller GetLocalDirectoryInstaller(this ServiceSource source)
+        public IServiceInstaller GetLocalDirectoryInstaller(ServiceSource source)
         {
             if (source.Type != SourceType.LocalDirectory) throw new InvalidOperationException("Invalid SourceType");
 
