@@ -10,7 +10,7 @@ namespace Cli.Tests.Services
     public class ServiceInstallerFactoryExtensionsTests
     {
         private readonly Mock<IServiceInstallerFactory> _factory = new();
-        
+
         [Theory]
         [InlineData(SourceType.Docker)]
         [InlineData(SourceType.DockerImage)]
@@ -20,12 +20,13 @@ namespace Cli.Tests.Services
                 Type = type,
                 ImageName = "image",
             };
+            var expected = source with { Type = SourceType.DockerImage };
 
-            var result = _factory.Object.GetInstaller(source);
+            _ = _factory.Object.GetInstaller(source);
 
-            Assert.IsType<DockerImageInstaller>(result);
+            _factory.Verify(x => x.GetDockerImageInstaller(expected));
         }
-        
+
         [Theory]
         [InlineData(SourceType.Docker)]
         [InlineData(SourceType.DockerBuild)]
@@ -35,12 +36,13 @@ namespace Cli.Tests.Services
                 Type = type,
                 BuildContext = "context",
             };
+            var expected = source with { Type = SourceType.DockerBuild };
 
-            var result = _factory.Object.GetInstaller(source);
+            _ = _factory.Object.GetInstaller(source);
 
-            Assert.IsType<DockerBuildInstaller>(result);
+            _factory.Verify(x => x.GetDockerBuildInstaller(expected));
         }
-        
+
         [Fact]
         public void GetInstaller_GetsGitInstaller()
         {
@@ -49,9 +51,9 @@ namespace Cli.Tests.Services
                 CloneUrl = "a url",
             };
 
-            var result = _factory.Object.GetInstaller(source);
+            _ = _factory.Object.GetInstaller(source);
 
-            Assert.IsType<GitInstaller>(result);
+            _factory.Verify(x => x.GetGitInstaller(source));
         }
 
         [Fact]
@@ -62,9 +64,9 @@ namespace Cli.Tests.Services
                 ToolName = "tool",
             };
 
-            var result = _factory.Object.GetInstaller(source);
+            _ = _factory.Object.GetInstaller(source);
 
-            Assert.IsType<DotnetToolInstaller>(result);
+            _factory.Verify(x => x.GetDotnetToolInstaller(source));
         }
 
         [Fact]
@@ -72,9 +74,9 @@ namespace Cli.Tests.Services
         {
             var source = new ServiceSource { Type = SourceType.LocalDirectory };
 
-            var result = _factory.Object.GetInstaller(source);
+            _ = _factory.Object.GetInstaller(source);
 
-            Assert.IsType<NoOpInstaller>(result);
+            _factory.Verify(x => x.GetLocalDirectoryInstaller(source));
         }
 
         [Fact]
@@ -92,9 +94,9 @@ namespace Cli.Tests.Services
 
             Assert.Throws<NotSupportedException>(() => _factory.Object.GetInstaller(source));
         }
-        
+
         [Theory]
-        [MemberData(nameof(ValuesExcept), SourceType.Docker)]
+        [MemberData(nameof(SourceTypeValuesExcept), SourceType.Docker, SourceType.DockerBuild, SourceType.DockerImage)]
         public void GetDockerInstaller_RequiresDockerSourceType(SourceType type)
         {
             var source = new ServiceSource { Type = type };
@@ -109,10 +111,11 @@ namespace Cli.Tests.Services
                 Type = SourceType.Docker,
                 BuildContext = "context",
             };
+            var expected = source with { Type = SourceType.DockerBuild };
 
-            var result = _factory.Object.GetDockerInstaller(source);
+            _ = _factory.Object.GetDockerInstaller(source);
 
-            Assert.IsType<DockerBuildInstaller>(result);
+            _factory.Verify(x => x.GetDockerBuildInstaller(expected));
         }
 
         [Fact]
@@ -122,12 +125,18 @@ namespace Cli.Tests.Services
                 Type = SourceType.Docker,
                 ImageName = "image",
             };
+            var expected = source with { Type = SourceType.DockerImage };
 
-            var result = _factory.Object.GetDockerInstaller(source);
+            _ = _factory.Object.GetDockerInstaller(source);
 
-            Assert.IsType<DockerImageInstaller>(result);
+            _factory.Verify(x => x.GetDockerImageInstaller(expected));
         }
 
-        private static IEnumerable<object[]> ValuesExcept(SourceType type) => new SourceTypeValuesExcept(type);
+        // MemberData doesn't support params, so this is fine for now.
+        private static IEnumerable<object[]> SourceTypeValuesExcept(
+            SourceType type1,
+            SourceType type2,
+            SourceType type3)
+            => new SourceTypeValuesExcept(type1, type2, type3);
     }
 }
