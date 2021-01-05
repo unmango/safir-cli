@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cli.Services.Installers;
 
-namespace Cli.Services
+namespace Cli.Services.Installers
 {
-    internal static class ServiceSourceExtensions
+    internal static class DefaultServiceInstallerFactory
     {
         public static IServiceInstaller GetInstaller(this ServiceSource source)
             => source.InferSourceType() switch {

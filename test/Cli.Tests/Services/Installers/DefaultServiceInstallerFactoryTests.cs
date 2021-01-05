@@ -5,9 +5,9 @@ using Cli.Services;
 using Cli.Services.Installers;
 using Xunit;
 
-namespace Cli.Tests.Services
+namespace Cli.Tests.Services.Installers
 {
-    public class ServiceSourceExtensionsTests
+    public class DefaultServiceInstallerFactoryTests
     {
         [Theory]
         [InlineData(SourceType.Docker)]
