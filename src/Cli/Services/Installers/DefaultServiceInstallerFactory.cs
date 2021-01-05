@@ -6,39 +6,6 @@ namespace Cli.Services.Installers
 {
     internal static class DefaultServiceInstallerFactory
     {
-        public static IServiceInstaller GetInstaller(this ServiceSource source)
-            => source.InferSourceType() switch {
-                SourceType.Docker => GetDockerInstaller(source),
-                SourceType.DockerBuild => GetDockerBuildInstaller(source),
-                SourceType.DockerImage => GetDockerImageInstaller(source),
-                SourceType.DotnetTool => GetDotnetToolInstaller(source),
-                SourceType.Git => GetGitInstaller(source),
-                SourceType.LocalDirectory => GetLocalDirectoryInstaller(source),
-                null => throw new InvalidOperationException("SourceType must be set to retrieve installer"),
-                _ => throw new NotSupportedException("SourceType is not supported")
-            };
-
-        public static IServiceInstaller GetDockerInstaller(this ServiceSource source)
-        {
-            while (true)
-            {
-                // ReSharper disable once ConvertIfStatementToSwitchStatement
-                if (source.Type == SourceType.DockerBuild) return GetDockerBuildInstaller(source);
-                if (source.Type == SourceType.DockerImage) return GetDockerImageInstaller(source);
-
-                if (source.Type != SourceType.Docker) throw new InvalidOperationException("Invalid SourceType");
-
-                var inferred = (source with { Type = null }).InferSourceType(out var updated);
-
-                // Shouldn't ever happen, but will cause an infinite loop if it does.
-                // Should hopefully prevent future me from being an idiot.
-                if (inferred == SourceType.Docker)
-                    throw new InvalidOperationException("Cannot infer \"Docker\" source type");
-
-                source = updated;
-            }
-        }
-
         public static IServiceInstaller GetDockerBuildInstaller(this ServiceSource source)
         {
             if (source.Type != SourceType.DockerBuild) throw new InvalidOperationException("Invalid SourceType");

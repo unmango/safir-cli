@@ -10,123 +10,6 @@ namespace Cli.Tests.Services.Installers
     public class DefaultServiceInstallerFactoryTests
     {
         [Theory]
-        [InlineData(SourceType.Docker)]
-        [InlineData(SourceType.DockerImage)]
-        public void GetInstaller_GetsDockerImageInstaller(SourceType type)
-        {
-            var source = new ServiceSource {
-                Type = type,
-                ImageName = "image",
-            };
-
-            var result = source.GetInstaller();
-
-            Assert.IsType<DockerImageInstaller>(result);
-        }
-        
-        [Theory]
-        [InlineData(SourceType.Docker)]
-        [InlineData(SourceType.DockerBuild)]
-        public void GetInstaller_GetsDockerBuildInstaller(SourceType type)
-        {
-            var source = new ServiceSource {
-                Type = type,
-                BuildContext = "context",
-            };
-
-            var result = source.GetInstaller();
-
-            Assert.IsType<DockerBuildInstaller>(result);
-        }
-        
-        [Fact]
-        public void GetInstaller_GetsGitInstaller()
-        {
-            var source = new ServiceSource {
-                Type = SourceType.Git,
-                CloneUrl = "a url",
-            };
-
-            var result = source.GetInstaller();
-
-            Assert.IsType<GitInstaller>(result);
-        }
-
-        [Fact]
-        public void GetInstaller_GetsDotnetToolInstaller()
-        {
-            var source = new ServiceSource {
-                Type = SourceType.DotnetTool,
-                ToolName = "tool",
-            };
-
-            var result = source.GetInstaller();
-
-            Assert.IsType<DotnetToolInstaller>(result);
-        }
-
-        [Fact]
-        public void GetInstaller_GetsLocalDirectoryInstaller()
-        {
-            var source = new ServiceSource { Type = SourceType.LocalDirectory };
-
-            var result = source.GetInstaller();
-
-            Assert.IsType<NoOpInstaller>(result);
-        }
-
-        [Fact]
-        public void GetInstaller_ThrowsWhenTypeIsNotSet()
-        {
-            var source = new ServiceSource { Type = null };
-
-            Assert.Throws<InvalidOperationException>(() => source.GetInstaller());
-        }
-
-        [Fact]
-        public void GetInstaller_ThrowsWhenTypeIsUnrecognized()
-        {
-            var source = new ServiceSource { Type = (SourceType)69 };
-
-            Assert.Throws<NotSupportedException>(() => source.GetInstaller());
-        }
-
-        [Theory]
-        [MemberData(nameof(SourceTypeValuesExcept), SourceType.Docker)]
-        public void GetDockerInstaller_RequiresDockerSourceType(SourceType type)
-        {
-            var source = new ServiceSource { Type = type };
-
-            Assert.Throws<InvalidOperationException>(() => source.GetDockerInstaller());
-        }
-
-        [Fact]
-        public void GetDockerInstaller_InfersDockerBuildInstaller()
-        {
-            var source = new ServiceSource {
-                Type = SourceType.Docker,
-                BuildContext = "context",
-            };
-
-            var result = source.GetDockerInstaller();
-
-            Assert.IsType<DockerBuildInstaller>(result);
-        }
-
-        [Fact]
-        public void GetDockerInstaller_InfersDockerImageInstaller()
-        {
-            var source = new ServiceSource {
-                Type = SourceType.Docker,
-                ImageName = "image",
-            };
-
-            var result = source.GetDockerInstaller();
-
-            Assert.IsType<DockerImageInstaller>(result);
-        }
-        
-        [Theory]
         [MemberData(nameof(SourceTypeValuesExcept), SourceType.DockerBuild)]
         public void GetDockerBuildInstaller_RequiresDockerBuildSourceType(SourceType type)
         {
@@ -282,12 +165,7 @@ namespace Cli.Tests.Services.Installers
         }
 
         private static IEnumerable<object[]> SourceTypeValuesExcept(SourceType type)
-        {
-            return Enum.GetValues<SourceType>()
-                .Except(new[] { type })
-                .Concat(new[] { (SourceType)69 })
-                .Select(x => new object[] { x });
-        }
+            => new SourceTypeValuesExcept(type);
 
         private static IEnumerable<object[]> NullOrWhitespaceStrings()
         {
