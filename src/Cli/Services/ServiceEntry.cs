@@ -9,6 +9,6 @@ namespace Cli.Services
 
         // Because of jank with the Microsoft.Extensions.Options API
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public IReadOnlyList<ServiceSource> Sources { get; init; }
+        public IReadOnlyList<ServiceSource> Sources { get; init; } = null!;
     }
 }
