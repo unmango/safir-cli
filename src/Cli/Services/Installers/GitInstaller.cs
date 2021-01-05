@@ -18,8 +18,10 @@ namespace Cli.Services.Installers
 
         public GitInstaller() { }
         
-        public GitInstaller(string cloneUrl, IRepositoryFunctions repository)
+        public GitInstaller(string cloneUrl, IRepositoryFunctions repository, IRemoteFunctions remote)
         {
+            if (!remote.IsValidName(cloneUrl)) throw new ArgumentException("Invalid clone url", nameof(cloneUrl));
+
             _cloneUrl = cloneUrl;
             _repository = repository;
         }
@@ -33,7 +35,7 @@ namespace Cli.Services.Installers
         {
             if (!_repository.IsValid(context.InstallationDirectory))
                 _repository.Clone(_cloneUrl, context.InstallationDirectory, _options);
-            
+
             return ValueTask.CompletedTask;
         }
     }

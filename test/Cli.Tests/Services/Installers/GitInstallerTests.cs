@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Cli.Services;
 using Cli.Services.Installers;
@@ -12,11 +13,24 @@ namespace Cli.Tests.Services.Installers
     {
         private const string CloneUrl = "url";
         private readonly Mock<IRepositoryFunctions> _repository = new();
+        private readonly Mock<IRemoteFunctions> _remote = new();
         private readonly GitInstaller _installer;
 
         public GitInstallerTests()
         {
-            _installer = new GitInstaller(CloneUrl, _repository.Object);
+            _remote.Setup(x => x.IsValidName(It.IsAny<string>())).Returns(true);
+            _installer = new GitInstaller(CloneUrl, _repository.Object, _remote.Object);
+        }
+
+        [Theory]
+        [InlineData("not a url")]
+        [InlineData("www.example.com")]
+        [InlineData("svn://192.168.420.69/svn-repo")]
+        public void Constructor_RequiresValidGitUrl(string url)
+        {
+            _remote.Setup(x => x.IsValidName(It.IsAny<string>())).Returns(false);
+            
+            Assert.Throws<ArgumentException>(() => new GitInstaller(url, _repository.Object, _remote.Object));
         }
 
         [Fact]
