@@ -2,17 +2,19 @@ using System;
 using System.Collections.Generic;
 using Cli.Services;
 using Cli.Services.Installers;
+using Moq;
 using Xunit;
 
 namespace Cli.Tests.Services.Installers
 {
     public class DefaultServiceInstallerFactoryTests
     {
+        private readonly Mock<IServiceProvider> _services = new();
         private readonly DefaultServiceInstallerFactory _factory;
         
         public DefaultServiceInstallerFactoryTests()
         {
-            _factory = new DefaultServiceInstallerFactory();
+            _factory = new DefaultServiceInstallerFactory(_services.Object);
         }
         
         [Theory]
