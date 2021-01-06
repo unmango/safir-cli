@@ -16,9 +16,12 @@ namespace Cli.Services.Sources.Validation
         public static ValidationResult Validate(
             this ServiceSource source,
             Action<ValidationStrategy<ServiceSource>>? options = null)
-            => source.Validate(
-                source.InferSourceType() ?? throw new NotSupportedException("Unable to infer source type to validate"),
-                options);
+        {
+            if (!source.TryInferSourceType(out var inferred))
+                throw new NotSupportedException("Unable to infer source type to validate");
+            
+            return source.Validate(inferred, options);
+        }
 
         public static ValidationResult Validate(
             this ServiceSource source,
