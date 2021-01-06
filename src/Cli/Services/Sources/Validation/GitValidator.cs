@@ -12,7 +12,7 @@ namespace Cli.Services.Sources.Validation
                 .NotNull()
                 .NotEmpty()
                 .ValidUrl()
-                .Must(x => x!.EndsWith(".git"));
+                .Must(x => x?.EndsWith(".git") ?? false);
         }
     }
 }
