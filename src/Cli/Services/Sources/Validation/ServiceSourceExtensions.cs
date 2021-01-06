@@ -13,6 +13,28 @@ namespace Cli.Services.Sources.Validation
         private static readonly IValidator<ServiceSource> _git = new GitValidator();
         private static readonly IValidator<ServiceSource> _localDirectory = new LocalDirectoryValidator();
 
+        public static ValidationResult Validate(
+            this ServiceSource source,
+            Action<ValidationStrategy<ServiceSource>>? options = null)
+            => source.Validate(
+                source.InferSourceType() ?? throw new NotSupportedException("Unable to infer source type to validate"),
+                options);
+
+        public static ValidationResult Validate(
+            this ServiceSource source,
+            SourceType type,
+            Action<ValidationStrategy<ServiceSource>>? options = null)
+            => type switch {
+                // TODO: I can do better than throw here
+                SourceType.Docker => throw new NotSupportedException("Can't validate \"Docker\" source type"),
+                SourceType.DockerBuild => source.ValidateDockerBuild(options),
+                SourceType.DockerImage => source.ValidateDockerImage(options),
+                SourceType.DotnetTool => source.ValidateDotnetTool(options),
+                SourceType.Git => source.ValidateGit(options),
+                SourceType.LocalDirectory => source.ValidateLocalDirectory(options),
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Invalid source type")
+            };
+
         public static ValidationResult ValidateDockerBuild(
             this ServiceSource source,
             Action<ValidationStrategy<ServiceSource>>? options = null)
