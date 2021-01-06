@@ -5,6 +5,7 @@ using FluentValidation.Results;
 
 namespace Cli.Services.Sources
 {
+    // TODO: Infer source type?
     internal static class ServiceSourceExtensions
     {
         public static DockerBuildSource GetDockerBuildSource(this ServiceSource source)
