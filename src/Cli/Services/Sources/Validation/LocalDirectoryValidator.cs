@@ -11,7 +11,7 @@ namespace Cli.Services.Sources.Validation
             RuleFor(x => x.SourceDirectory)
                 .NotNull()
                 .NotEmpty()
-                .Must(Directory.Exists);
+                .Must(Directory.Exists); // TODO: Abstract for mocking probably
         }
     }
 }
