@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using Cli.Services;
-using Cli.Services.Installers;
 using Cli.Services.Sources.Validation;
 using FluentValidation.TestHelper;
 using Xunit;
@@ -38,7 +36,7 @@ namespace Cli.Tests.Services.Sources.Validation
         }
 
         [Fact]
-        public void GetsDockerBuildInstaller()
+        public void ValidatesForDockerBuild()
         {
             var source = new ServiceSource {
                 Type = SourceType.DockerBuild,
