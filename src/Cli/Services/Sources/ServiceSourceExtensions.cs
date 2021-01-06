@@ -1,45 +1,39 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Cli.Services.Sources.Validation;
-using FluentValidation;
+using FluentValidation.Results;
 
 namespace Cli.Services.Sources
 {
     internal static class ServiceSourceExtensions
     {
-        private static readonly IValidator<ServiceSource> _dockerBuild = new DockerBuildValidator();
-        private static readonly IValidator<ServiceSource> _dockerImage = new DockerImageValidator();
-        private static readonly IValidator<ServiceSource> _dotnetTool = new DotnetToolValidator();
-        private static readonly IValidator<ServiceSource> _git = new GitValidator();
-        private static readonly IValidator<ServiceSource> _localDirectory = new LocalDirectoryValidator();
-
         public static DockerBuildSource GetDockerBuildSource(this ServiceSource source)
         {
-            _dockerBuild.ValidateAndThrow(source);
+            source.ValidateDockerBuild(o => o.ThrowOnFailures());
             return new DockerBuildSource(source.BuildContext!, source.Tag);
         }
 
         public static DockerImageSource GetDockerImageSource(this ServiceSource source)
         {
-            _dockerImage.ValidateAndThrow(source);
+            source.ValidateDockerImage(o => o.ThrowOnFailures());
             return new DockerImageSource(source.ImageName!, source.Tag);
         }
 
         public static DotnetToolSource GetDotnetToolSource(this ServiceSource source)
         {
-            _dotnetTool.ValidateAndThrow(source);
+            source.ValidateDotnetTool(o => o.ThrowOnFailures());
             return new DotnetToolSource(source.ToolName!, source.ExtraArgs);
         }
 
         public static GitSource GetGitSource(this ServiceSource source)
         {
-            _git.ValidateAndThrow(source);
+            source.ValidateGit(o => o.ThrowOnFailures());
             return new GitSource(source.CloneUrl!);
         }
 
         public static LocalDirectorySource GetLocalDirectorySource(this ServiceSource source)
         {
-            _localDirectory.ValidateAndThrow(source);
+            source.ValidateLocalDirectory(o => o.ThrowOnFailures());
             return new LocalDirectorySource(source.SourceDirectory!);
         }
 
@@ -47,7 +41,7 @@ namespace Cli.Services.Sources
             this ServiceSource source,
             [MaybeNullWhen(false)] out DockerBuildSource dockerBuild)
             => source.TryGet(
-                _dockerBuild,
+                x => x.ValidateDockerBuild(),
                 x => new DockerBuildSource(x.BuildContext!, x.Tag),
                 out dockerBuild);
 
@@ -55,7 +49,7 @@ namespace Cli.Services.Sources
             this ServiceSource source,
             [MaybeNullWhen(false)] out DockerImageSource dockerImage)
             => source.TryGet(
-                _dockerImage,
+                x => x.ValidateDockerImage(),
                 x => new DockerImageSource(x.ImageName!, x.Tag),
                 out dockerImage);
 
@@ -63,7 +57,7 @@ namespace Cli.Services.Sources
             this ServiceSource source,
             [MaybeNullWhen(false)] out DotnetToolSource dotnetTool)
             => source.TryGet(
-                _dotnetTool,
+                x => x.ValidateDotnetTool(),
                 x => new DotnetToolSource(x.ToolName!, x.ExtraArgs),
                 out dotnetTool);
 
@@ -71,7 +65,7 @@ namespace Cli.Services.Sources
             this ServiceSource source,
             [MaybeNullWhen(false)] out GitSource git)
             => source.TryGet(
-                _git,
+                x => x.ValidateGit(),
                 x => new GitSource(x.CloneUrl!),
                 out git);
 
@@ -79,18 +73,18 @@ namespace Cli.Services.Sources
             this ServiceSource source,
             [MaybeNullWhen(false)] out LocalDirectorySource localDirectory)
             => source.TryGet(
-                _localDirectory,
+                x => x.ValidateLocalDirectory(),
                 x => new LocalDirectorySource(x.SourceDirectory!),
                 out localDirectory);
 
         private static bool TryGet<T>(
             this ServiceSource source,
-            IValidator<ServiceSource> validator,
+            Func<ServiceSource, ValidationResult> validator,
             Func<ServiceSource, T> factory,
             [MaybeNullWhen(false)] out T gotten)
         {
             gotten = default;
-            var result = validator.Validate(source);
+            var result = validator(source);
             if (result.IsValid) gotten = factory(source);
             return result.IsValid;
         }
