@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cli.Services;
 using Cli.Services.Sources.Validation;
+using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
@@ -46,6 +47,24 @@ namespace Cli.Tests.Services.Sources.Validation
             var result = _validator.TestValidate(source);
 
             result.ShouldNotHaveAnyValidationErrors();
+        }
+
+        [Theory]
+        [ClassData(typeof(NullOrWhitespaceStrings))]
+        public void RequiresTagWhenValidatingOptionalRuleSet(string tag)
+        {
+            var source = new ServiceSource {
+                Type = SourceType.DockerImage,
+                ImageName = "image",
+                Tag = tag,
+            };
+
+            var result = _validator.TestValidate(source, o => {
+                o.IncludeRuleSets("Optional");
+            });
+
+            result.ShouldHaveValidationErrorFor(x => x.Tag);
+            Assert.Contains(result.Errors, x => x.Severity == Severity.Info);
         }
 
         private static IEnumerable<object[]> SourceTypeValuesExcept(SourceType type) => SourceTypeValues.Except(type);
