@@ -11,7 +11,7 @@ namespace Cli.Tests.Services
         private static readonly IEnumerable<SourceType> _values =
             Enum.GetValues<SourceType>().Concat(new[] { (SourceType)69 });
 
-        public SourceTypeValues(IEnumerable<SourceType>? values = null)
+        private SourceTypeValues(IEnumerable<SourceType>? values = null)
         {
             foreach (var value in values ?? _values) Add(value);
         }
