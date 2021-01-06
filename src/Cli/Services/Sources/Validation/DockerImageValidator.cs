@@ -8,7 +8,10 @@ namespace Cli.Services.Sources.Validation
         {
             RuleFor(x => x.Type).Equal(SourceType.DockerImage);
             RuleFor(x => x.ImageName).NotNull().NotEmpty();
-            RuleFor(x => x.Tag).NotEmpty().WithSeverity(Severity.Info);
+            
+            RuleSet("Optional", () => {
+                RuleFor(x => x.Tag).NotEmpty().WithSeverity(Severity.Info);
+            });
         }
     }
 }
