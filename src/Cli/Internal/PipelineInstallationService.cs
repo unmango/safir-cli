@@ -20,6 +20,7 @@ namespace Cli.Internal
         {
             var workingDirectory = _serviceDirectory.GetInstallationDirectory(directory);
 
+            // ReSharper disable once UnusedVariable
             var context = new InstallationContext(
                 workingDirectory,
                 service,

@@ -27,6 +27,7 @@ namespace Cli.Internal
 
             if (extraPaths != null)
             {
+                _logger.LogDebug("Resolving extra paths");
                 var filtered = extraPaths.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
                 var rooted = filtered.Where(RootedAndExists).ToList();
 
