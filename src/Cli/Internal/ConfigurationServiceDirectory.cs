@@ -27,22 +27,20 @@ namespace Cli.Internal
 
             if (extraPaths != null)
             {
-                var filtered = extraPaths.Where(x => !string.IsNullOrWhiteSpace(x));
-                var directories = filtered.Where(Path.EndsInDirectorySeparator).ToList();
-                var rooted = directories.Where(Path.IsPathRooted).ToList();
+                var filtered = extraPaths.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+                var rooted = filtered.Where(RootedAndExists).ToList();
 
                 // If passed a valid rooted path, return the first that exists 
-                if (rooted.Count >= 1) return rooted.First(Directory.Exists);
+                if (rooted.Count >= 1) return rooted.First();
 
-                var relativeDirs = directories.ToLookup(x => x.Contains(Path.DirectorySeparatorChar));
+                var relativeDirs = filtered.ToLookup(x => x.Contains(Path.DirectorySeparatorChar));
                 extraDirs.AddRange(relativeDirs[true]);
                 extraParts.AddRange(relativeDirs[false]);
             }
 
-            throw new System.NotImplementedException();
+            return Path.Join(_options.Value.Config.Directory, ServiceOptions.DefaultInstallationDirectory);
         }
 
-        private static bool ValidRootedPath(string path) =>
-            Path.IsPathRooted(path) && Path.EndsInDirectorySeparator(path);
+        private static bool RootedAndExists(string path) => Path.IsPathRooted(path) && Directory.Exists(path);
     }
 }
