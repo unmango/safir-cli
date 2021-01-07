@@ -1,6 +1,5 @@
 using Cli.Internal;
 using Microsoft.Extensions.Options;
-using Moq;
 using Moq.AutoMock;
 using Xunit;
 
@@ -8,6 +7,7 @@ namespace Cli.Tests.Internal
 {
     public class ConfigurationServiceDirectoryTests
     {
+        // TODO: Your machine too!
         private const string ConfigDir = "/home/erik/.safir";
         private static readonly AutoMocker _mocker = new();
 
