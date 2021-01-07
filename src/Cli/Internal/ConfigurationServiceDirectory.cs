@@ -38,7 +38,12 @@ namespace Cli.Internal
                 extraParts.AddRange(relativeDirs[false]);
             }
 
-            return Path.Join(_options.Value.Config.Directory, ServiceOptions.DefaultInstallationDirectory);
+            var toJoin = new[] {
+                _options.Value.Config.Directory,
+                ServiceOptions.DefaultInstallationDirectory,
+            }.Concat(extraParts);
+
+            return Path.Join(toJoin.ToArray());
         }
 
         private static bool RootedAndExists(string path) => Path.IsPathRooted(path) && Directory.Exists(path);
