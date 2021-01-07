@@ -6,12 +6,19 @@ namespace Cli.Internal
 {
     internal class PipelineInstallationService : IInstallationService
     {
+        private readonly IServiceDirectory _serviceDirectory;
+
+        public PipelineInstallationService(IServiceDirectory serviceDirectory)
+        {
+            _serviceDirectory = serviceDirectory;
+        }
+        
         public Task InstallAsync(
             ServiceEntry service,
             string? directory = null,
             CancellationToken cancellationToken = default)
         {
-            var workingDirectory = directory ?? string.Empty; // TODO
+            var workingDirectory = _serviceDirectory.GetInstallationDirectory(directory);
 
             var context = new InstallationContext(
                 workingDirectory,
