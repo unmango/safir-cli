@@ -8,7 +8,7 @@ using Cli.Services.Sources;
 
 namespace Cli.Services.Installers
 {
-    internal class GitInstaller : IServiceInstaller, IPipelineServiceInstaller
+    internal class GitInstaller : PipelineServiceInstaller
     {
         private readonly string _cloneUrl;
 
@@ -17,22 +17,14 @@ namespace Cli.Services.Installers
             _cloneUrl = cloneUrl;
         }
 
-        public ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
+        public override ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public bool AppliesTo(InstallationContext context)
+        public override bool AppliesTo(InstallationContext context)
         {
             return context.Sources.Any(x => x.TryGetGitSource(out _));
         }
-
-        public ValueTask InvokeAsync(
-            InstallationContext context,
-            Func<InstallationContext, ValueTask> next,
-            CancellationToken cancellationToken = default)
-            => AppliesTo(context)
-                ? InstallAsync(context, cancellationToken)
-                : next(context);
     }
 }
