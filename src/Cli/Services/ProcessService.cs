@@ -26,7 +26,8 @@ namespace Cli.Services
             IEnumerable<string> args)
         {
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
-            _config = config.Value ?? throw new ArgumentNullException(nameof(config));
+            // ReSharper disable once ConstantConditionalAccessQualifier
+            _config = config?.Value ?? throw new ArgumentNullException(nameof(config));
             _logger = logger;
             _process = process;
             _args = args.ToList();
