@@ -40,7 +40,7 @@ namespace Cli
                 if (value == null) throw new ArgumentNullException(nameof(Manager));
                 
                 // Maybe won't always want to overwrite a custom name.
-                _manager = value with { Name = "Manager" };
+                _manager = value with { Name = nameof(Manager) };
             }
         }
 
