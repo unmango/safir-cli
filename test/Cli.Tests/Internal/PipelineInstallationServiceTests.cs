@@ -45,6 +45,20 @@ namespace Cli.Tests.Internal
         }
 
         [Fact]
+        public async Task InvokesInstaller()
+        {
+            var installer = new Mock<IPipelineServiceInstaller>();
+            _mocker.Use<IEnumerable<IPipelineServiceInstaller>>(new[] { installer.Object });
+
+            await _service.InstallAsync(_defaultService);
+            
+            installer.Verify(x => x.InvokeAsync(
+                It.IsAny<InstallationContext>(),
+                It.IsAny<Func<InstallationContext,ValueTask>>(),
+                It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
         public async Task InvokesWithCorrectContext()
         {
             var expectedSources = new[] { new ServiceSource() };
