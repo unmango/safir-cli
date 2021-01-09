@@ -1,6 +1,4 @@
-using System.Diagnostics;
-
-namespace Cli.Internal
+namespace Cli.Internal.Wrappers.Process
 {
     internal class DefaultProcessFactory : IProcessFactory
     {
@@ -8,11 +6,11 @@ namespace Cli.Internal
         {
             if (args == null) return new ProcessWrapper();
             
-            Process process = new();
+            System.Diagnostics.Process process = new();
 
             if (args.Id.HasValue)
             {
-                process = Process.GetProcessById(args.Id.Value);
+                process = System.Diagnostics.Process.GetProcessById(args.Id.Value);
             }
 
             if (args.StartInfo != null)

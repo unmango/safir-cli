@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Cli.Internal;
+using Cli.Internal.Wrappers.Process;
 using Moq;
 using Xunit;
 

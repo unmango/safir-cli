@@ -1,4 +1,4 @@
-namespace Cli.Internal
+namespace Cli.Internal.Wrappers.Process
 {
     /// <summary>
     /// An abstraction for creating new <see cref="System.Diagnostics.Process"/>es.

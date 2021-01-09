@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Cli.Internal
+namespace Cli.Internal.Wrappers.Process
 {
     /// <summary>
     /// An abstraction for <see cref="System.Diagnostics.Process"/>.

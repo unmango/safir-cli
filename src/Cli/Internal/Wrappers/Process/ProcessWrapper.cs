@@ -1,20 +1,20 @@
 using System.Diagnostics;
 
-namespace Cli.Internal
+namespace Cli.Internal.Wrappers.Process
 {
     /// <summary>
     /// Wraps <see cref="Process"/>.
     /// </summary>
     internal sealed class ProcessWrapper : IProcess
     {
-        public ProcessWrapper(Process? process = null)
+        public ProcessWrapper(System.Diagnostics.Process? process = null)
         {
-            Process = process ?? new Process();
+            Process = process ?? new System.Diagnostics.Process();
         }
 
         public int Id => Process.Id;
         
-        public Process Process { get; }
+        public System.Diagnostics.Process Process { get; }
 
         public ProcessStartInfo StartInfo => Process.StartInfo;
 
