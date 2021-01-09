@@ -11,8 +11,6 @@ namespace Cli.Services.Installation
     {
         public Exception? Exception { get; init; }
         
-        public bool Installed { get; init; }
-        
         public IImmutableDictionary<object, object> Properties { get; init; } =
             ImmutableDictionary<object, object>.Empty;
     }
