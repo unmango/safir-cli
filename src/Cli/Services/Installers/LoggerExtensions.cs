@@ -19,12 +19,12 @@ namespace Cli.Services.Installers
                 new EventId(2, nameof(ApplicableInstallers)),
                 "Applicable installers: {Installers}");
         
-        public static void InitialInstallers(this ILogger logger, IEnumerable<IPipelineServiceInstaller> installers)
+        public static void InitialInstallers(this ILogger logger, IEnumerable<IInstallationMiddleware> installers)
         {
             _initialInstallers(logger, installers.Select(x => x.GetType().Name), null);
         }
         
-        public static void ApplicableInstallers(this ILogger logger, IEnumerable<IPipelineServiceInstaller> installers)
+        public static void ApplicableInstallers(this ILogger logger, IEnumerable<IInstallationMiddleware> installers)
         {
             _applicableInstallers(logger, installers.Select(x => x.GetType().Name), null);
         }

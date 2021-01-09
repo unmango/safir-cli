@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Cli.Services.Installers
 {
-    internal abstract class PipelineServiceInstaller : IServiceInstaller, IPipelineServiceInstaller
+    internal abstract class PipelineServiceInstaller : IServiceInstaller, IInstallationMiddleware
     {
         public abstract bool AppliesTo(InstallationContext context);
 

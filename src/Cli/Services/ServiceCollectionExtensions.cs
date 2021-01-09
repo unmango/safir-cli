@@ -13,7 +13,7 @@ namespace Cli.Services
             services.AddTransient<IInstallationPipeline, DefaultInstallationPipeline>();
 
             services.AddLibGit2Sharp();
-            services.AddTransient<IPipelineServiceInstaller, GitInstaller>();
+            services.AddTransient<IInstallationMiddleware, GitInstaller>();
             
             return services;
         }

@@ -28,7 +28,7 @@ namespace Cli.Tests.Services
             var services = _services.AddServiceInstallationPipeline()
                 .BuildServiceProvider();
 
-            var installers = services.GetService<IEnumerable<IPipelineServiceInstaller>>();
+            var installers = services.GetService<IEnumerable<IInstallationMiddleware>>();
             
             Assert.NotNull(installers);
             Assert.True(installers!.Any());

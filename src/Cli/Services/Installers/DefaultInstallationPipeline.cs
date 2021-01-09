@@ -9,11 +9,11 @@ namespace Cli.Services.Installers
 {
     internal class DefaultInstallationPipeline : IInstallationPipeline
     {
-        private readonly IEnumerable<IPipelineServiceInstaller> _installers;
+        private readonly IEnumerable<IInstallationMiddleware> _installers;
         private readonly ILogger<DefaultInstallationPipeline> _logger;
 
         public DefaultInstallationPipeline(
-            IEnumerable<IPipelineServiceInstaller> installers,
+            IEnumerable<IInstallationMiddleware> installers,
             ILogger<DefaultInstallationPipeline> logger)
         {
             _installers = installers;

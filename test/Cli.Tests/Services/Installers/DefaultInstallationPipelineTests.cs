@@ -13,8 +13,8 @@ namespace Cli.Tests.Services.Installers
     public class DefaultInstallationPipelineTests
     {
         private readonly AutoMocker _mocker = new();
-        private readonly Mock<IPipelineServiceInstaller> _installer1 = new();
-        private readonly Mock<IPipelineServiceInstaller> _installer2 = new();
+        private readonly Mock<IInstallationMiddleware> _installer1 = new();
+        private readonly Mock<IInstallationMiddleware> _installer2 = new();
         private readonly DefaultInstallationPipeline _pipeline;
 
         private readonly InstallationContext _context = new(
@@ -26,7 +26,7 @@ namespace Cli.Tests.Services.Installers
         {
             _installer1.Setup(x => x.AppliesTo(It.IsAny<InstallationContext>())).Returns(true);
             _installer2.Setup(x => x.AppliesTo(It.IsAny<InstallationContext>())).Returns(true);
-            _mocker.Use<IEnumerable<IPipelineServiceInstaller>>(new[] {
+            _mocker.Use<IEnumerable<IInstallationMiddleware>>(new[] {
                 _installer1.Object,
                 _installer2.Object,
             });

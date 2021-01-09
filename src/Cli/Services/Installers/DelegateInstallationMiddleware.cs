@@ -5,12 +5,12 @@ using Cli.Internal;
 
 namespace Cli.Services.Installers
 {
-    internal class DelegatePipelineServiceInstaller : IPipelineServiceInstaller
+    internal class DelegateInstallationMiddleware : IInstallationMiddleware
     {
         private readonly AppliesTo<InstallationContext> _appliesTo;
         private readonly InvokeAsync<InstallationContext> _invokeAsync;
 
-        public DelegatePipelineServiceInstaller(
+        public DelegateInstallationMiddleware(
             AppliesTo<InstallationContext> appliesTo,
             InvokeAsync<InstallationContext> invokeAsync)
         {
