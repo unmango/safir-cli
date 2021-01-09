@@ -47,8 +47,7 @@ namespace Cli.Tests.Internal
         [Fact]
         public async Task InvokesInstaller()
         {
-            var installer = new Mock<IPipelineServiceInstaller>();
-            _mocker.Use<IEnumerable<IPipelineServiceInstaller>>(new[] { installer.Object });
+            var installer = _mocker.GetMock<IPipelineServiceInstaller>();
 
             await _service.InstallAsync(_defaultService);
             
@@ -65,8 +64,8 @@ namespace Cli.Tests.Internal
             var serviceEntry = _defaultService with {
                 Sources = expectedSources
             };
-            var installer = new Mock<IPipelineServiceInstaller>();
-            _mocker.Use<IEnumerable<IPipelineServiceInstaller>>(new[] { installer.Object });
+            var installer = _mocker.GetMock<IPipelineServiceInstaller>();
+
             
             await _service.InstallAsync(serviceEntry);
             
