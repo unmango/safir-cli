@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cli.Services.Installers.Vcs;
 using Cli.Services.Sources;
+using Cli.Services.Sources.Validation;
 using LibGit2Sharp;
 
 namespace Cli.Services.Installers
@@ -22,7 +23,7 @@ namespace Cli.Services.Installers
 
         internal GitInstaller(string cloneUrl, IRepositoryFunctions repository) : this(repository)
         {
-            _cloneUrl = cloneUrl;
+            _cloneUrl = ValidateUrl(cloneUrl);
         }
 
         public override bool AppliesTo(InstallationContext context)
@@ -64,6 +65,21 @@ namespace Cli.Services.Installers
 
             // TODO: Progress callback?   
             _repository.Clone(cloneUrl, directory, _options);
+        }
+
+        private static string ValidateUrl(string? cloneUrl)
+        {
+            var result = new ServiceSource {
+                Type = SourceType.Git,
+                CloneUrl = cloneUrl
+            }.ValidateGit();
+
+            if (!result.IsValid)
+            {
+                throw new ArgumentException(result.ToString(), nameof(cloneUrl));
+            }
+
+            return cloneUrl!;
         }
     }
 }
