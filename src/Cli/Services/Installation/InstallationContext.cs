@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Cli.Services
+namespace Cli.Services.Installation
 {
     internal record InstallationContext(
         string WorkingDirectory,

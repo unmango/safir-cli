@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cli.Services
+namespace Cli.Services.Installation
 {
     internal delegate ValueTask InstallAsync(
         InstallationContext context,

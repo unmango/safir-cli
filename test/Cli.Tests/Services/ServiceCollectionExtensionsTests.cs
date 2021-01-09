@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cli.Services;
+using Cli.Services.Installation;
 using Cli.Services.Installation.Installers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

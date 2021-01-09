@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cli.Services;
+using Cli.Services.Installation;
 using Cli.Services.Installation.Installers;
 using Cli.Services.Installation.Installers.Vcs;
 using LibGit2Sharp;

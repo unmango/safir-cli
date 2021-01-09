@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cli.Services;
+using Cli.Services.Installation;
 using Moq;
 using Xunit;
 

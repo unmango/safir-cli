@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Cli.Services;
+using Cli.Internal;
 using Cli.Services.Installation.Installers;
 using Microsoft.Extensions.Logging;
 
-namespace Cli.Internal
+namespace Cli.Services.Installation
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class PipelineInstallationService : IInstallationService

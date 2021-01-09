@@ -1,6 +1,6 @@
 using Cli.Internal;
 
-namespace Cli.Services
+namespace Cli.Services.Installation
 {
     internal interface IInstallationMiddleware : IPipelineBehaviour<InstallationContext>
     {

@@ -1,8 +1,7 @@
 using System;
-using Cli.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Cli.Internal
+namespace Cli.Services.Installation
 {
     internal static class LoggerExtensions
     {

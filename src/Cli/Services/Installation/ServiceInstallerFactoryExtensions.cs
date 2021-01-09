@@ -1,6 +1,6 @@
 using System;
 
-namespace Cli.Services
+namespace Cli.Services.Installation
 {
     internal static class ServiceInstallerFactoryExtensions
     {
