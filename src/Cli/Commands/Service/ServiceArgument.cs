@@ -6,13 +6,19 @@ namespace Cli.Commands.Service
 {
     internal sealed class ServiceArgument : Argument<string>
     {
+        private const string DefaultDescription = "The name of the service the manage";
+        
         private static readonly string[] _services = {
             "manager",
             "listener",
         };
+
+        public ServiceArgument(string description) : this(null, description)
+        {
+        }
         
-        public ServiceArgument(IEnumerable<string>? services = null)
-            : base("service", "The name of the service the modify")
+        public ServiceArgument(IEnumerable<string>? services = null, string? description = null)
+            : base("service", description ?? DefaultDescription)
         {
             Arity = ArgumentArity.OneOrMore;
 
