@@ -10,21 +10,23 @@ namespace Cli.Services.Installers
 {
     internal class GitInstaller : PipelineServiceInstaller
     {
-        private readonly string _cloneUrl;
+        private readonly string? _cloneUrl;
 
+        public GitInstaller() { }
+        
         public GitInstaller(string cloneUrl)
         {
             _cloneUrl = cloneUrl;
         }
 
-        public override ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool AppliesTo(InstallationContext context)
         {
             return context.Sources.Any(x => x.TryGetGitSource(out _));
+        }
+
+        public override ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }
