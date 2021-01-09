@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cli.Services;
 using Cli.Services.Installers;
@@ -137,6 +138,63 @@ namespace Cli.Tests.Services.Installers
                 Times.Exactly(2));
         }
 
+        [Theory]
+        [ClassData(typeof(InvalidTypesAndUrls))]
+        public async Task InvokeAsync_DoesNotInstallWhenNotApplicable(SourceType type, string? cloneUrl)
+        {
+            var context = _defaultContext with {
+                Sources = new[] {
+                    _defaultSource with {
+                        Type = type,
+                        CloneUrl = cloneUrl
+                    }
+                }
+            };
+            var repository = _mocker.GetMock<IRepositoryFunctions>();
+
+            await _installer.InvokeAsync(context, _ => ValueTask.CompletedTask);
+            
+            repository.Verify(
+                x => x.Clone(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CloneOptions>()),
+                Times.Never);
+        }
+
+        [Theory]
+        [ClassData(typeof(InvalidTypesAndUrls))]
+        public async Task InvokeAsync_InvokesNextDelegateWhenNotApplicable(SourceType type, string? cloneUrl)
+        {
+            var context = _defaultContext with {
+                Sources = new[] {
+                    _defaultSource with {
+                        Type = type,
+                        CloneUrl = cloneUrl
+                    }
+                }
+            };
+            var flag = false;
+
+            await _installer.InvokeAsync(context, _ => {
+                flag = true;
+                return ValueTask.CompletedTask;
+            });
+            
+            Assert.True(flag);
+        }
+
         private static IEnumerable<object[]> SourceTypeValuesExcept(SourceType type) => SourceTypeValues.Except(type);
+
+        private class InvalidTypesAndUrls : TheoryData<SourceType, string?>
+        {
+            public InvalidTypesAndUrls()
+            {
+                foreach (var type in SourceTypeValuesExcept(SourceType.Git).Select(x => (SourceType)x.Single()))
+                {
+                    foreach (var cloneUrl in new NullOrWhitespaceStrings().Select(x => x.Single() as string))
+                    {
+                        Add(type, cloneUrl);
+                    }
+                }
+            }
+        }
     }
 }
