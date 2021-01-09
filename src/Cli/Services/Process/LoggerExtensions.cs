@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace Cli.Services
+namespace Cli.Services.Process
 {
     internal static class LoggerExtensions
     {

@@ -7,7 +7,7 @@ using Cli.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Cli.Services
+namespace Cli.Services.Process
 {
     internal class ProcessService : IService
     {

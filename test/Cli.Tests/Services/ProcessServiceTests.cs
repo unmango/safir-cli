@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Cli.Internal;
 using Cli.Services;
+using Cli.Services.Process;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
