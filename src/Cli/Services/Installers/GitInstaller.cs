@@ -19,7 +19,7 @@ namespace Cli.Services.Installers
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-        
+
         internal GitInstaller(string cloneUrl, IRepositoryFunctions repository) : this(repository)
         {
             _cloneUrl = cloneUrl;
@@ -30,17 +30,40 @@ namespace Cli.Services.Installers
             return context.Sources.Any(x => x.TryGetGitSource(out _));
         }
 
-        public override ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
+        public override ValueTask InstallAsync(
+            InstallationContext context,
+            CancellationToken cancellationToken = default)
         {
-            var (workingDirectory, _, serviceSources) = context;
-            var source = serviceSources.Select(x => x.GetGitSource()).First();
-            var cloneUrl = _cloneUrl ?? source.CloneUrl;
-            
-            // TODO: Progress callback?
-            if (!_repository.IsValid(workingDirectory))
-                _repository.Clone(cloneUrl, workingDirectory, _options);
+            Install(context);
 
             return ValueTask.CompletedTask;
+        }
+
+        private void Install(InstallationContext context)
+        {
+            var (workingDirectory, _, sources) = context;
+
+            if (!string.IsNullOrWhiteSpace(_cloneUrl))
+            {
+                Clone(_cloneUrl, workingDirectory);
+                return;
+            }
+
+            foreach (var source in sources)
+            {
+                if (source.TryGetGitSource(out var gitSource))
+                {
+                    Clone(gitSource.CloneUrl, workingDirectory);
+                }
+            }
+        }
+
+        private void Clone(string cloneUrl, string directory)
+        {
+            if (_repository.IsValid(directory)) return;
+
+            // TODO: Progress callback?   
+            _repository.Clone(cloneUrl, directory, _options);
         }
     }
 }
