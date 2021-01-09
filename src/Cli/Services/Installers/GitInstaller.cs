@@ -10,7 +10,7 @@ using LibGit2Sharp;
 
 namespace Cli.Services.Installers
 {
-    internal class GitInstaller : PipelineServiceInstaller
+    internal class GitInstaller : ServiceInstallerMiddleware
     {
         private readonly CloneOptions _options = new();
         private readonly string? _cloneUrl;
