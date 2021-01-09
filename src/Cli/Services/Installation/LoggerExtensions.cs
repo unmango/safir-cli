@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 
 namespace Cli.Services.Installation
@@ -23,6 +25,18 @@ namespace Cli.Services.Installation
                 new EventId(3, nameof(InitialContextCreated)),
                 "Initial installation context created: {Context}");
         
+        private static readonly Action<ILogger, IEnumerable<string>, Exception?> _initialInstallers =
+            LoggerMessage.Define<IEnumerable<string>>(
+                LogLevel.Trace,
+                new EventId(4, nameof(InitialInstallers)),
+                "Initial installers: {Installers}");
+        
+        private static readonly Action<ILogger, IEnumerable<string>, Exception?> _applicableInstallers =
+            LoggerMessage.Define<IEnumerable<string>>(
+                LogLevel.Debug,
+                new EventId(5, nameof(ApplicableInstallers)),
+                "Applicable installers: {Installers}");
+        
         public static void InvokedWorkingDirectory(this ILogger logger, string? directory)
         {
             _invokedWorkingDirectory(logger, directory, null);
@@ -36,6 +50,16 @@ namespace Cli.Services.Installation
         public static void InitialContextCreated(this ILogger logger, InstallationContext context)
         {
             _initialContextCreated(logger, context, null);
+        }
+        
+        public static void InitialInstallers(this ILogger logger, IEnumerable<IInstallationMiddleware> installers)
+        {
+            _initialInstallers(logger, installers.Select(x => x.GetType().Name), null);
+        }
+        
+        public static void ApplicableInstallers(this ILogger logger, IEnumerable<IInstallationMiddleware> installers)
+        {
+            _applicableInstallers(logger, installers.Select(x => x.GetType().Name), null);
         }
     }
 }
