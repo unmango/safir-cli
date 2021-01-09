@@ -142,7 +142,7 @@ namespace Cli.Tests.Services.Installers
         public async Task InstallAsync_InstallsToServiceNameSubDirectory()
         {
             const string name = "serviceName";
-            var expected = $"{WorkingDirectory}/{name}";
+            var expected = $"{WorkingDirectory}/{name}".ToLower();
             var context = _defaultContext with {
                 Service = new ServiceEntry { Name = name }
             };
