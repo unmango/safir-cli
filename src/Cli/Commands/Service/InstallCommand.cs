@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -11,11 +10,11 @@ namespace Cli.Commands.Service
 {
     internal class InstallCommand : Command
     {
-        private static readonly Option _concurrent = new Option<bool>(
+        private static readonly Option<bool> _concurrent = new(
             new[] { "--concurrent" },
             "Install multiple services concurrently");
 
-        private static readonly Option _directory = new Option<string>(
+        private static readonly Option<string> _directory = new(
             new[] { "-d", "--directory" },
             "Optional directory to install to");
 
@@ -43,9 +42,9 @@ namespace Cli.Commands.Service
             public async Task<int> InvokeAsync(InvocationContext context)
             {
                 var parseResult = context.ParseResult;
-                var concurrent = parseResult.ValueForOption<bool>(_concurrent);
-                var directory = parseResult.ValueForOption<string>(_directory);
-                var services = parseResult.ValueForArgument<IEnumerable<string>>(_services);
+                var concurrent = parseResult.ValueForOption(_concurrent);
+                var directory = parseResult.ValueForOption(_directory);
+                var services = parseResult.ValueForArgument(_services);
                 
                 var toInstall = _options.Value.Join(
                     services!,
