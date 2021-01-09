@@ -20,7 +20,7 @@ namespace Cli.Commands.Service
             "Optional directory to install to");
 
         private static readonly ServiceArgument _services = new("The name of the service to install");
-        
+
         public InstallCommand() : base("install", "Installs the specified service(s)")
         {
             AddOption(_concurrent);
@@ -44,27 +44,30 @@ namespace Cli.Commands.Service
                 _installer = installer;
                 _logger = logger;
             }
-            
+
             public async Task<int> InvokeAsync(InvocationContext context)
             {
                 var parseResult = context.ParseResult;
                 var concurrent = parseResult.ValueForOption(_concurrent);
                 var directory = parseResult.ValueForOption(_directory);
-                var services = parseResult.ValueForArgument(_services);
-                
+                var services = parseResult.ValueForArgument(_services)!.ToList();
+
                 _logger.BoolOption(nameof(concurrent), concurrent);
                 _logger.Option(nameof(directory), directory!);
                 _logger.Option(nameof(services), services!);
-                
-                var toInstall = _options.Value.Join(
-                    services!,
-                    x => x.Key,
-                    x => x,
-                    (pair, _) => (Name: pair.Key, Service: pair.Value),
-                    StringComparer.OrdinalIgnoreCase)
+
+                var toInstall = _options.Value
+                    .Join(
+                        services!,
+                        x => x.Key,
+                        x => x,
+                        (pair, _) => (Name: pair.Key, Service: pair.Value),
+                        StringComparer.OrdinalIgnoreCase)
                     .ToList();
-                
-                _logger.ServicesToInstall(toInstall.Select(x => x.Name));
+
+                var names = toInstall.Select(x => x.Name).ToList();
+                _logger.ServicesToInstall(names);
+                _logger.UnmatchedServices(services.Except(names, StringComparer.OrdinalIgnoreCase));
 
                 try
                 {
@@ -73,7 +76,7 @@ namespace Cli.Commands.Service
                         concurrent,
                         directory,
                         context.GetCancellationToken());
-                    
+
                     _logger.InstallationSucceeded();
 
                     return context.ResultCode;
