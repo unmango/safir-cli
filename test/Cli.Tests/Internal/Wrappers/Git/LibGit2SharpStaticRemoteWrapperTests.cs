@@ -1,7 +1,7 @@
 using Cli.Internal.Wrappers.Git;
 using Xunit;
 
-namespace Cli.Tests.Services.Installers.Vcs
+namespace Cli.Tests.Internal.Wrappers.Git
 {
     // No need to test external libraries, but I want to verify I know how the library works myself.
     public class LibGit2SharpStaticRemoteWrapperTests

@@ -1,4 +1,4 @@
-namespace Cli.Services.Installation
+namespace Cli.Services.Installation.Installers
 {
     internal interface IServiceInstallerFactory
     {

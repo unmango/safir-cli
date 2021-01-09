@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Cli.Internal.Wrappers.Git;
 using Cli.Services;
 using Cli.Services.Installation.Installers;
+using Cli.Tests.Helpers;
 using Moq;
 using Xunit;
 
-namespace Cli.Tests.Services.Installers
+namespace Cli.Tests.Services.Installation
 {
     public class DefaultServiceInstallerFactoryTests
     {

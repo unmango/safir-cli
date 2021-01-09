@@ -4,7 +4,7 @@ using System.Linq;
 using Cli.Services;
 using Xunit;
 
-namespace Cli.Tests.Services
+namespace Cli.Tests.Helpers
 {
     public class SourceTypeValues : TheoryData<SourceType>
     {

@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Cli.Internal;
 using Cli.Internal.Pipeline;
+using Cli.Services.Installation.Installers;
 using Microsoft.Extensions.Logging;
 
-namespace Cli.Services.Installation.Installers
+namespace Cli.Services.Installation
 {
     internal class DefaultInstallationPipeline : IInstallationPipeline
     {

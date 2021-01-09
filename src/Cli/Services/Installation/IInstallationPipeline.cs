@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cli.Services.Installation.Installers
+namespace Cli.Services.Installation
 {
     internal interface IInstallationPipeline
     {

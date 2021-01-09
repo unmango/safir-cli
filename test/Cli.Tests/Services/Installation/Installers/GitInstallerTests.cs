@@ -6,12 +6,13 @@ using Cli.Internal.Wrappers.Git;
 using Cli.Services;
 using Cli.Services.Installation;
 using Cli.Services.Installation.Installers;
+using Cli.Tests.Helpers;
 using LibGit2Sharp;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace Cli.Tests.Services.Installers
+namespace Cli.Tests.Services.Installation.Installers
 {
     public class GitInstallerTests
     {

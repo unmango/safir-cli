@@ -9,7 +9,7 @@ using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace Cli.Tests.Services.Installers
+namespace Cli.Tests.Services.Installation
 {
     public class DefaultInstallationPipelineTests
     {

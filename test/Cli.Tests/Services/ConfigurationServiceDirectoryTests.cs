@@ -1,10 +1,9 @@
-using Cli.Internal;
 using Cli.Services;
 using Microsoft.Extensions.Options;
 using Moq.AutoMock;
 using Xunit;
 
-namespace Cli.Tests.Internal
+namespace Cli.Tests.Services
 {
     public class ConfigurationServiceDirectoryTests
     {

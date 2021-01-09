@@ -1,15 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using Cli.Internal;
 using Cli.Internal.Wrappers.Process;
-using Cli.Services;
 using Cli.Services.Process;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace Cli.Tests.Services
+namespace Cli.Tests.Services.Process
 {
     public class ProcessServiceTests
     {

@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Cli.Tests.Services
+namespace Cli.Tests.Helpers
 {
     public class NullOrWhitespaceStrings : TheoryData<string?>
     {

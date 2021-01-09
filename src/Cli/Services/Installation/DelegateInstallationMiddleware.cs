@@ -1,10 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Cli.Internal;
 using Cli.Internal.Pipeline;
 
-namespace Cli.Services.Installation.Installers
+namespace Cli.Services.Installation
 {
     internal class DelegateInstallationMiddleware : IInstallationMiddleware
     {
