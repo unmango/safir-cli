@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cli.Services;
 using Cli.Services.Installation;
-using Cli.Services.Installation.Installers;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
@@ -57,7 +56,7 @@ namespace Cli.Tests.Services.Installation
                     It.IsAny<Func<InstallationContext, ValueTask>>(),
                     It.IsAny<CancellationToken>()))
                 .Callback<InstallationContext, Func<InstallationContext, ValueTask>, CancellationToken>(
-                    async (context, next, cancellationToken) => await next(context));
+                    async (context, next, _) => await next(context));
             
             _installer1.Setup(x => x.AppliesTo(_context)).Returns(true);
             _installer2.Setup(x => x.AppliesTo(_context)).Returns(true);
