@@ -11,9 +11,6 @@ namespace Cli.Internal
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class PipelineInstallationService : IInstallationService
     {
-        private static readonly Func<InstallationContext, CancellationToken, ValueTask> _seed =
-            (_, _) => ValueTask.CompletedTask;
-
         private readonly IServiceDirectory _serviceDirectory;
         private readonly IEnumerable<IPipelineServiceInstaller> _installers;
         private readonly ILogger<PipelineInstallationService> _logger;
@@ -42,19 +39,8 @@ namespace Cli.Internal
                 // TODO: Select sources
                 service.Sources);
 
-            var pipeline = CreatePipeline(_installers);
-            await pipeline(context, cancellationToken);
+            var pipeline = _installers.BuildPipeline();
+            await pipeline(context, _ => ValueTask.CompletedTask, cancellationToken);
         }
-
-        private static Func<InstallationContext, CancellationToken, ValueTask> CreatePipeline(
-            IEnumerable<IPipelineServiceInstaller> installers)
-            => installers.Aggregate(
-                _seed,
-                (pipeline, installer)
-                    => (context, cancellationToken)
-                        => installer.InvokeAsync(
-                            context,
-                            innerContext => pipeline(innerContext, cancellationToken),
-                            cancellationToken));
     }
 }
