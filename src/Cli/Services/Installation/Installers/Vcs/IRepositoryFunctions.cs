@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 
-namespace Cli.Services.Installers.Vcs
+namespace Cli.Services.Installation.Installers.Vcs
 {
     public interface IRepositoryFunctions
     {

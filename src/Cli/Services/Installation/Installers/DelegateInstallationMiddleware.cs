@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cli.Internal;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal class DelegateInstallationMiddleware : IInstallationMiddleware
     {

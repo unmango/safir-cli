@@ -1,4 +1,4 @@
-using Cli.Services.Installers.Vcs;
+using Cli.Services.Installation.Installers.Vcs;
 using Xunit;
 
 namespace Cli.Tests.Services.Installers.Vcs

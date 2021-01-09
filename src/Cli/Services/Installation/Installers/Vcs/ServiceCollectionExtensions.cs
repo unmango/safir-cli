@@ -1,7 +1,7 @@
 using LibGit2Sharp;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cli.Services.Installers.Vcs
+namespace Cli.Services.Installation.Installers.Vcs
 {
     internal static class ServiceCollectionExtensions
     {

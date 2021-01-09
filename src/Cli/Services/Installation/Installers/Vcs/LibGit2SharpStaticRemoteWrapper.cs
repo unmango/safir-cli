@@ -1,6 +1,6 @@
 using LibGit2Sharp;
 
-namespace Cli.Services.Installers.Vcs
+namespace Cli.Services.Installation.Installers.Vcs
 {
     public class LibGit2SharpStaticRemoteWrapper : IRemoteFunctions
     {

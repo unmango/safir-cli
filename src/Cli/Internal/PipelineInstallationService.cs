@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Cli.Services;
-using Cli.Services.Installers;
+using Cli.Services.Installation.Installers;
 using Microsoft.Extensions.Logging;
 
 namespace Cli.Internal

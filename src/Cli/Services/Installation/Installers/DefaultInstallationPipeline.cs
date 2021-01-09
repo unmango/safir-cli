@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cli.Internal;
 using Microsoft.Extensions.Logging;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal class DefaultInstallationPipeline : IInstallationPipeline
     {

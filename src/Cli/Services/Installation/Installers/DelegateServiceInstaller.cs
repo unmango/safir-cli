@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal class DelegateServiceInstaller : IServiceInstaller
     {

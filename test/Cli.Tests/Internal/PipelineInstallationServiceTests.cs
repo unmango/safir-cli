@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cli.Internal;
 using Cli.Services;
-using Cli.Services.Installers;
+using Cli.Services.Installation.Installers;
 using Moq;
 using Moq.AutoMock;
 using Xunit;

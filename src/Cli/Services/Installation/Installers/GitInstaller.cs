@@ -3,12 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Cli.Services.Installers.Vcs;
+using Cli.Services.Installation.Installers.Vcs;
 using Cli.Services.Sources;
 using Cli.Services.Sources.Validation;
 using LibGit2Sharp;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal class GitInstaller : ServiceInstallerMiddleware
     {
@@ -29,7 +29,7 @@ namespace Cli.Services.Installers
 
         public override bool AppliesTo(InstallationContext context)
         {
-            return context.Sources.Any(x => x.TryGetGitSource(out _));
+            return context.Sources.Any(x => Sources.ServiceSourceExtensions.TryGetGitSource(x, out _));
         }
 
         public override ValueTask InstallAsync(

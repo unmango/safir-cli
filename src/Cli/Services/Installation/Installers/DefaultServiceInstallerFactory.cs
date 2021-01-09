@@ -1,8 +1,8 @@
 using System;
-using Cli.Services.Installers.Vcs;
+using Cli.Services.Installation.Installers.Vcs;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal class DefaultServiceInstallerFactory : IServiceInstallerFactory
     {

@@ -1,4 +1,4 @@
-namespace Cli.Services.Installers.Vcs
+namespace Cli.Services.Installation.Installers.Vcs
 {
     public interface IRemoteFunctions
     {

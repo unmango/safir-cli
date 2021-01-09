@@ -1,8 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+
 // ReSharper disable NotAccessedField.Local
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal class DotnetToolInstaller : IServiceInstaller
     {

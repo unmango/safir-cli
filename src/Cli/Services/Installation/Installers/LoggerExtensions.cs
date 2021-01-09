@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal static class LoggerExtensions
     {

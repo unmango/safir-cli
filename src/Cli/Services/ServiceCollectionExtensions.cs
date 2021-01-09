@@ -1,5 +1,5 @@
-using Cli.Services.Installers;
-using Cli.Services.Installers.Vcs;
+using Cli.Services.Installation.Installers;
+using Cli.Services.Installation.Installers.Vcs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cli.Services

@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cli.Services.Installers
+namespace Cli.Services.Installation.Installers
 {
     internal sealed class NoOpInstaller : IServiceInstaller
     {

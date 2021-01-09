@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Cli.Services;
-using Cli.Services.Installers;
-using Cli.Services.Installers.Vcs;
+using Cli.Services.Installation.Installers;
+using Cli.Services.Installation.Installers.Vcs;
 using Moq;
 using Xunit;
 
