@@ -1,4 +1,4 @@
-namespace Cli.Services.Installation.Installers.Vcs
+namespace Cli.Internal.Wrappers.Git
 {
     public interface IRemoteFunctions
     {

@@ -1,4 +1,4 @@
-using Cli.Services.Installation.Installers.Vcs;
+using Cli.Internal.Wrappers.Git;
 using Xunit;
 
 namespace Cli.Tests.Services.Installers.Vcs

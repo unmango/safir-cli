@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Cli.Services.Installation.Installers.Vcs;
+using Cli.Internal.Wrappers.Git;
 using Cli.Services.Sources;
 using Cli.Services.Sources.Validation;
 using LibGit2Sharp;

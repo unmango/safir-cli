@@ -1,5 +1,5 @@
 using System;
-using Cli.Services.Installation.Installers.Vcs;
+using Cli.Internal.Wrappers.Git;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cli.Services.Installation.Installers

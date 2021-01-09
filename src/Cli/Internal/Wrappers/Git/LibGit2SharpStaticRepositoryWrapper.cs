@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 
-namespace Cli.Services.Installation.Installers.Vcs
+namespace Cli.Internal.Wrappers.Git
 {
     public class LibGit2SharpStaticRepositoryWrapper : IRepositoryFunctions
     {
