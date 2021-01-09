@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Cli.Commands.Service
 {
-    internal sealed class ServiceArgument : Argument<string>
+    internal sealed class ServiceArgument : Argument<IEnumerable<string>>
     {
         private const string DefaultDescription = "The name of the service the manage";
         
