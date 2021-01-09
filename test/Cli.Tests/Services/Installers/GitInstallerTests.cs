@@ -13,13 +13,11 @@ namespace Cli.Tests.Services.Installers
     {
         private const string CloneUrl = "url";
         private readonly Mock<IRepositoryFunctions> _repository = new();
-        private readonly Mock<IRemoteFunctions> _remote = new();
         private readonly GitInstaller _installer;
 
         public GitInstallerTests()
         {
-            _remote.Setup(x => x.IsValidName(It.IsAny<string>())).Returns(true);
-            _installer = new GitInstaller(CloneUrl, _repository.Object, _remote.Object);
+            _installer = new GitInstaller(CloneUrl, _repository.Object);
         }
 
         [Theory]
@@ -28,16 +26,17 @@ namespace Cli.Tests.Services.Installers
         [InlineData("svn://192.168.420.69/svn-repo")]
         public void Constructor_RequiresValidGitUrl(string url)
         {
-            _remote.Setup(x => x.IsValidName(It.IsAny<string>())).Returns(false);
-            
-            Assert.Throws<ArgumentException>(() => new GitInstaller(url, _repository.Object, _remote.Object));
+            Assert.Throws<ArgumentException>(() => new GitInstaller(url, _repository.Object));
         }
 
         [Fact]
         public async Task InstallAsync_ClonesRepository()
         {
             const string workingDir = "workdir";
-            var context = new InstallationContext(workingDir);
+            var context = new InstallationContext(
+                workingDir,
+                new ServiceEntry(),
+                new[] { new ServiceSource() });
 
             await _installer.InstallAsync(context);
             
@@ -48,7 +47,10 @@ namespace Cli.Tests.Services.Installers
         public async Task InstallAsync_SkipsCloneWhenRepositoryExists()
         {
             const string workingDir = "workdir";
-            var context = new InstallationContext(workingDir);
+            var context = new InstallationContext(
+                workingDir,
+                new ServiceEntry(),
+                new[] { new ServiceSource() });
             _repository.Setup(x => x.IsValid(workingDir)).Returns(true);
 
             await _installer.InstallAsync(context);
