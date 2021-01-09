@@ -117,7 +117,7 @@ namespace Cli.Tests.Services.Installers
         {
             var source = new ServiceSource {
                 Type = SourceType.Git,
-                CloneUrl = "a url",
+                CloneUrl = "https://example.com/repo.git",
             };
             _remoteFunctions.Setup(x => x.IsValidName(It.IsAny<string>())).Returns(true);
 
