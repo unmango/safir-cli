@@ -9,7 +9,6 @@ namespace Cli.Services.Sources.Validation
         {
             RuleFor(x => x.Type).Equal(SourceType.Git);
             RuleFor(x => x.CloneUrl)
-                .NotNull()
                 .NotEmpty()
                 .ValidUrl()
                 .Must(x => x?.EndsWith(".git") ?? false);
