@@ -29,8 +29,10 @@ namespace Cli.Services.Installers
 
             if (applicable.Count <= 0) return ValueTask.CompletedTask;
 
-            return applicable.BuildPipeline()
-                .Invoke(context, _ => ValueTask.CompletedTask, cancellationToken);
+            return applicable.BuildPipeline().Invoke(
+                context,
+                _ => ValueTask.CompletedTask,
+                cancellationToken);
         }
     }
 }
