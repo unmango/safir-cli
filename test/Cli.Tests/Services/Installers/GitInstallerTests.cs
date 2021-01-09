@@ -5,6 +5,7 @@ using Cli.Services.Installers;
 using Cli.Services.Installers.Vcs;
 using LibGit2Sharp;
 using Moq;
+using Moq.AutoMock;
 using Xunit;
 
 namespace Cli.Tests.Services.Installers
@@ -12,12 +13,12 @@ namespace Cli.Tests.Services.Installers
     public class GitInstallerTests
     {
         private const string CloneUrl = "url";
-        private readonly Mock<IRepositoryFunctions> _repository = new();
+        private readonly AutoMocker _mocker = new();
         private readonly GitInstaller _installer;
 
         public GitInstallerTests()
         {
-            _installer = new GitInstaller(CloneUrl, _repository.Object);
+            _installer = _mocker.Get<GitInstaller>();
         }
 
         [Theory]
@@ -26,7 +27,9 @@ namespace Cli.Tests.Services.Installers
         [InlineData("svn://192.168.420.69/svn-repo")]
         public void Constructor_RequiresValidGitUrl(string url)
         {
-            Assert.Throws<ArgumentException>(() => new GitInstaller(url, _repository.Object));
+            var repository = _mocker.GetMock<IRepositoryFunctions>();
+            
+            Assert.Throws<ArgumentException>(() => new GitInstaller(url, repository.Object));
         }
 
         [Fact]
@@ -37,10 +40,11 @@ namespace Cli.Tests.Services.Installers
                 workingDir,
                 new ServiceEntry(),
                 new[] { new ServiceSource() });
+            var repository = _mocker.GetMock<IRepositoryFunctions>();
 
             await _installer.InstallAsync(context);
             
-            _repository.Verify(x => x.Clone(CloneUrl, workingDir, It.IsAny<CloneOptions>()));
+            repository.Verify(x => x.Clone(CloneUrl, workingDir, It.IsAny<CloneOptions>()));
         }
 
         [Fact]
@@ -51,11 +55,12 @@ namespace Cli.Tests.Services.Installers
                 workingDir,
                 new ServiceEntry(),
                 new[] { new ServiceSource() });
-            _repository.Setup(x => x.IsValid(workingDir)).Returns(true);
+            var repository = _mocker.GetMock<IRepositoryFunctions>();
+            repository.Setup(x => x.IsValid(workingDir)).Returns(true);
 
             await _installer.InstallAsync(context);
             
-            _repository.Verify(x => x.Clone(CloneUrl, workingDir, It.IsAny<CloneOptions>()), Times.Never);
+            repository.Verify(x => x.Clone(CloneUrl, workingDir, It.IsAny<CloneOptions>()), Times.Never);
         }
     }
 }
