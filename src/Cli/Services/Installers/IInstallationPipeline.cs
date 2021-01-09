@@ -5,6 +5,6 @@ namespace Cli.Services.Installers
 {
     internal interface IInstallationPipeline
     {
-        ValueTask InstallAsync(ServiceEntry service, CancellationToken cancellationToken = default);
+        ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default);
     }
 }

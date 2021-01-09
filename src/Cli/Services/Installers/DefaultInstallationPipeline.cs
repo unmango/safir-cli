@@ -1,22 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cli.Internal;
 
 namespace Cli.Services.Installers
 {
     internal class DefaultInstallationPipeline : IInstallationPipeline
     {
         // ReSharper disable once NotAccessedField.Local
-        private readonly IEnumerable<IServiceInstaller> _installers;
+        private readonly IEnumerable<IPipelineServiceInstaller> _installers;
 
-        public DefaultInstallationPipeline(IEnumerable<IServiceInstaller> installers)
+        public DefaultInstallationPipeline(IEnumerable<IPipelineServiceInstaller> installers)
         {
             _installers = installers;
         }
         
-        public ValueTask InstallAsync(ServiceEntry service, CancellationToken cancellationToken = default)
+        public ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return _installers.Where(x => x.AppliesTo(context))
+                .BuildPipeline()
+                .Invoke(context, _ => ValueTask.CompletedTask, cancellationToken);
         }
     }
 }
