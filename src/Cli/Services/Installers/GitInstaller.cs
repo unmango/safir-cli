@@ -6,8 +6,6 @@ using Cli.Services.Installers.Vcs;
 using Cli.Services.Sources;
 using LibGit2Sharp;
 
-// ReSharper disable NotAccessedField.Local
-
 namespace Cli.Services.Installers
 {
     internal class GitInstaller : PipelineServiceInstaller
@@ -16,14 +14,15 @@ namespace Cli.Services.Installers
         private readonly string? _cloneUrl;
         private readonly IRepositoryFunctions _repository;
 
-        public GitInstaller() { }
-        
-        public GitInstaller(string cloneUrl, IRepositoryFunctions repository, IRemoteFunctions remote)
+        // ReSharper disable once MemberCanBePrivate.Global
+        public GitInstaller(IRepositoryFunctions repository)
         {
-            if (!remote.IsValidName(cloneUrl)) throw new ArgumentException("Invalid clone url", nameof(cloneUrl));
-
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+        
+        internal GitInstaller(string cloneUrl, IRepositoryFunctions repository) : this(repository)
+        {
             _cloneUrl = cloneUrl;
-            _repository = repository;
         }
 
         public override bool AppliesTo(InstallationContext context)
@@ -33,8 +32,13 @@ namespace Cli.Services.Installers
 
         public override ValueTask InstallAsync(InstallationContext context, CancellationToken cancellationToken = default)
         {
-            if (!_repository.IsValid(context.InstallationDirectory))
-                _repository.Clone(_cloneUrl, context.InstallationDirectory, _options);
+            var (workingDirectory, _, serviceSources) = context;
+            var source = serviceSources.Select(x => x.GetGitSource()).First();
+            var cloneUrl = _cloneUrl ?? source.CloneUrl;
+            
+            // TODO: Progress callback?
+            if (!_repository.IsValid(workingDirectory))
+                _repository.Clone(cloneUrl, workingDirectory, _options);
 
             return ValueTask.CompletedTask;
         }
