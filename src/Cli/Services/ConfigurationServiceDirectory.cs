@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Cli.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Cli.Internal
+namespace Cli.Services
 {
     internal class ConfigurationServiceDirectory : IServiceDirectory
     {
