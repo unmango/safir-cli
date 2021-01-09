@@ -1,4 +1,5 @@
 using Cli.Internal;
+using Cli.Internal.Pipeline;
 
 namespace Cli.Services.Installation
 {

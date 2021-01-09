@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cli.Internal;
+using Cli.Internal.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace Cli.Services.Installation.Installers

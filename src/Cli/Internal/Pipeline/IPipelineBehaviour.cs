@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cli.Internal
+namespace Cli.Internal.Pipeline
 {
     internal delegate bool AppliesTo<in T>(T context);
 
