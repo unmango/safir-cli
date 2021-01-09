@@ -11,11 +11,21 @@ namespace Cli.Commands.Service
 {
     internal class InstallCommand : Command
     {
+        private static readonly Option _concurrent = new Option<bool>(
+            new[] { "--concurrent" },
+            "Install multiple services concurrently");
+
+        private static readonly Option _directory = new Option<string>(
+            new[] { "-d", "--directory" },
+            "Optional directory to install to");
+
+        private static readonly ServiceArgument _services = new("The name of the service to install");
+        
         public InstallCommand() : base("install", "Installs the specified service(s)")
         {
-            AddArgument(new ServiceArgument());
-            AddOption(new Option(new[] { "--concurrent" }, "Install multiple services concurrently"));
-            AddOption(new Option(new[] { "-d", "--directory" }, "Optional directory to install to"));
+            AddOption(_concurrent);
+            AddOption(_directory);
+            AddArgument(_services);
         }
 
         // ReSharper disable once ClassNeverInstantiated.Global
@@ -30,25 +40,24 @@ namespace Cli.Commands.Service
                 _installer = installer;
             }
             
-            public bool Concurrent { get; set; }
-            
-            public string? Directory { get; set; }
-
-            public IEnumerable<string> Services { get; set; } = null!;
-            
             public async Task<int> InvokeAsync(InvocationContext context)
             {
-                var services = _options.Value.Join(
-                    Services,
+                var parseResult = context.ParseResult;
+                var concurrent = parseResult.ValueForOption<bool>(_concurrent);
+                var directory = parseResult.ValueForOption<string>(_directory);
+                var services = parseResult.ValueForArgument<IEnumerable<string>>(_services);
+                
+                var toInstall = _options.Value.Join(
+                    services!,
                     x => x.Key,
                     x => x,
                     (pair, _) => pair.Value,
                     StringComparer.OrdinalIgnoreCase);
 
                 await _installer.InstallAsync(
-                    services,
-                    Concurrent,
-                    Directory,
+                    toInstall,
+                    concurrent,
+                    directory,
                     context.GetCancellationToken());
 
                 return context.ResultCode;
