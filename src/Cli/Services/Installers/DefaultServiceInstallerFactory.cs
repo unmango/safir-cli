@@ -47,9 +47,8 @@ namespace Cli.Services.Installers
                 throw new InvalidOperationException("GitCloneUrl must have a value");
 
             var repository = _services.GetRequiredService<IRepositoryFunctions>();
-            var remote = _services.GetRequiredService<IRemoteFunctions>();
 
-            return new GitInstaller(source.CloneUrl, repository, remote);
+            return new GitInstaller(source.CloneUrl, repository);
         }
 
         public IServiceInstaller GetLocalDirectoryInstaller(ServiceSource source)
