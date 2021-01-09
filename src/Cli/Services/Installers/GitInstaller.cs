@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,11 +43,14 @@ namespace Cli.Services.Installers
 
         private void Install(InstallationContext context)
         {
-            var (workingDirectory, _, sources) = context;
+            var (workingDirectory, service, sources) = context;
+            var cloneDirectory = !string.IsNullOrWhiteSpace(service.Name)
+                ? Path.Combine(workingDirectory, service.Name.ToLower())
+                : workingDirectory;
 
             if (!string.IsNullOrWhiteSpace(_cloneUrl))
             {
-                Clone(_cloneUrl, workingDirectory);
+                Clone(_cloneUrl, cloneDirectory);
                 return;
             }
 
@@ -54,7 +58,7 @@ namespace Cli.Services.Installers
             {
                 if (source.TryGetGitSource(out var gitSource))
                 {
-                    Clone(gitSource.CloneUrl, workingDirectory);
+                    Clone(gitSource.CloneUrl, cloneDirectory);
                 }
             }
         }
