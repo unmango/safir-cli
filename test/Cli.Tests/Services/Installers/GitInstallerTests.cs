@@ -138,6 +138,21 @@ namespace Cli.Tests.Services.Installers
                 Times.Exactly(2));
         }
 
+        [Fact]
+        public async Task InstallAsync_InstallsToServiceNameSubDirectory()
+        {
+            const string name = "serviceName";
+            var expected = $"{WorkingDirectory}/{name}";
+            var context = _defaultContext with {
+                Service = new ServiceEntry { Name = name }
+            };
+            var repository = _mocker.GetMock<IRepositoryFunctions>();
+
+            await _installer.InstallAsync(context);
+            
+            repository.Verify(x => x.Clone(CloneUrl, expected, It.IsAny<CloneOptions>()));
+        }
+
         [Theory]
         [ClassData(typeof(InvalidTypesAndUrls))]
         public async Task InvokeAsync_DoesNotInstallWhenNotApplicable(SourceType type, string? cloneUrl)
