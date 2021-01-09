@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,7 +5,6 @@ using System.Threading.Tasks;
 using Cli.Internal;
 using Cli.Services;
 using Cli.Services.Installers;
-using Cli.Services.Sources;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
@@ -45,36 +43,19 @@ namespace Cli.Tests.Internal
         }
 
         [Fact]
-        public async Task InvokesInstaller()
-        {
-            var installer = _mocker.GetMock<IPipelineServiceInstaller>();
-
-            await _service.InstallAsync(_defaultService);
-            
-            installer.Verify(x => x.InvokeAsync(
-                It.IsAny<InstallationContext>(),
-                It.IsAny<Func<InstallationContext,ValueTask>>(),
-                It.IsAny<CancellationToken>()));
-        }
-
-        [Fact]
-        public async Task InvokesWithCorrectContext()
+        public async Task InvokesPipeline()
         {
             var expectedSources = new[] { new ServiceSource() };
-            var serviceEntry = _defaultService with {
-                Sources = expectedSources
-            };
-            var installer = _mocker.GetMock<IPipelineServiceInstaller>();
+            var service = _defaultService with { Sources = expectedSources };
+            var pipeline = _mocker.GetMock<IInstallationPipeline>();
 
-            
-            await _service.InstallAsync(serviceEntry);
-            
-            installer.Verify(x => x.InvokeAsync(
+            await _service.InstallAsync(service);
+
+            pipeline.Verify(x => x.InstallAsync(
                 It.Is<InstallationContext>(context =>
                     context.WorkingDirectory == WorkingDirectory &&
-                    context.Service == serviceEntry &&
-                    context.Sources == expectedSources),
-                It.IsAny<Func<InstallationContext, ValueTask>>(),
+                    context.Service == service &&
+                    context.Sources.Equals(expectedSources)),
                 It.IsAny<CancellationToken>()));
         }
     }
