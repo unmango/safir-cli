@@ -9,8 +9,8 @@ namespace Cli.Services
         {
             services.AddLogging();
             
-            services.AddSingleton<IInstallationPipeline, DefaultInstallationPipeline>();
-            services.AddSingleton<IPipelineServiceInstaller, GitInstaller>();
+            services.AddTransient<IInstallationPipeline, DefaultInstallationPipeline>();
+            services.AddTransient<IPipelineServiceInstaller, GitInstaller>();
             
             return services;
         }
