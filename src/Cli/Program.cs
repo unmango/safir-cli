@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Cli.Commands;
 using Cli.Internal;
 using Cli.Middleware;
+using Cli.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,6 +53,10 @@ namespace Cli
                     services.AddOptions<ServiceOptions>()
                         .Bind(config.GetSection("services"))
                         .AddValidators();
+
+                    services.AddTransient<IServiceDirectory, ConfigurationServiceDirectory>();
+
+                    services.AddInstallationService();
                 })
                 .ConfigureLogging((context, builder) => {
                     var configDir = context.Configuration[ConfigDirectoryKey];
