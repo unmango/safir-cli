@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 using Serilog.Formatting.Compact;
 using static System.Environment;
 
@@ -25,7 +26,7 @@ namespace Cli
         private const string ConfigFileKey = "config:file";
         private const string ConfigExistsKey = "config:exists";
         
-        private static readonly Option _debugOption = new(
+        private static readonly Option<bool> _debugOption = new(
             new[] { "--debug", "-d" },
             "Write debug information to the console");
 
@@ -63,11 +64,13 @@ namespace Cli
                     var logFile = Path.Combine(configDir, "logs", "log.json");
 
                     var configuration = new LoggerConfiguration()
+                        .MinimumLevel.Verbose()
+                        // .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
                         .Enrich.FromLogContext()
                         .WriteTo.Async(x => x.File(new CompactJsonFormatter(), logFile));
 
                     if (context.Properties[typeof(InvocationContext)] is InvocationContext invocation
-                        && invocation.ParseResult.ValueForOption<bool>(_debugOption))
+                        && invocation.ParseResult.ValueForOption(_debugOption))
                     {
                         configuration.WriteTo.Console();
                     }
