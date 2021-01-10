@@ -6,7 +6,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace Cli.Tests.Services.Sources.Validation
+namespace Cli.Tests.Services.Configuration.Validation
 {
     public class DockerBuildValidatorTests
     {
