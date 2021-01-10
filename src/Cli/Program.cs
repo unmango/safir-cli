@@ -10,6 +10,7 @@ using Cli.Commands;
 using Cli.Internal;
 using Cli.Middleware;
 using Cli.Services;
+using Cli.Services.Configuration;
 using Cli.Services.Installation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
