@@ -1,6 +1,6 @@
 using Cli.Services.Configuration;
 
-namespace Cli.Services
+namespace Cli.Services.Sources
 {
     internal abstract record ServiceSourceBase : IServiceSource
     {

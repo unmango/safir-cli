@@ -1,16 +1,16 @@
-using System;
-using Cli.Services.Sources;
-
 namespace Cli.Services.Configuration
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal record ServiceSource : ServiceSourceBase,
-        IDockerBuildSource,
-        IDockerImageSource,
-        IDotnetToolSource,
-        IGitSource,
-        ILocalDirectorySource
+    internal record ServiceSource
     {
+        public SourceType? Type { get; init; }
+        
+        public CommandType? Command { get; init; }
+        
+        public string? Name { get; init; }
+        
+        public int? Priority { get; init; }
+        
         public string? BuildContext { get; init; }
         
         public string? CloneUrl { get; init; }
@@ -26,21 +26,5 @@ namespace Cli.Services.Configuration
         public string? Tag { get; init; }
         
         public string? ToolName { get; init; }
-
-        string IDockerBuildSource.BuildContext
-            => BuildContext ?? throw new InvalidOperationException(NullCast(nameof(BuildContext)));
-
-        string IGitSource.CloneUrl => CloneUrl ?? throw new InvalidOperationException(NullCast(nameof(CloneUrl)));
-
-        string IDockerImageSource.ImageName
-            => ImageName ?? throw new InvalidOperationException(NullCast(nameof(ImageName)));
-
-        string ILocalDirectorySource.SourceDirectory
-            => SourceDirectory ?? throw new InvalidOperationException(NullCast(nameof(SourceDirectory)));
-
-        string IDotnetToolSource.ToolName
-            => ToolName ?? throw new InvalidOperationException(NullCast(nameof(ToolName)));
-
-        private static string NullCast(string propName) => $"{propName} was null";
     }
 }
