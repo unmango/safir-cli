@@ -2,7 +2,7 @@ using System;
 using Cli.Services.Configuration;
 using Xunit;
 
-namespace Cli.Tests.Services
+namespace Cli.Tests.Services.Configuration
 {
     public class ServiceSourceExtensionsTests
     {
