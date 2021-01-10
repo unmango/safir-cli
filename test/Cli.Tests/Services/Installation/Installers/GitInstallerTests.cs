@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cli.Internal.Wrappers.Git;
 using Cli.Services;
+using Cli.Services.Configuration;
 using Cli.Services.Installation;
 using Cli.Services.Installation.Installers;
 using Cli.Tests.Helpers;

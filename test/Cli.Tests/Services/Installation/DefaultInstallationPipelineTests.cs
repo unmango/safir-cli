@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Cli.Services;
+using Cli.Services.Configuration;
 using Cli.Services.Installation;
 using Moq;
 using Moq.AutoMock;

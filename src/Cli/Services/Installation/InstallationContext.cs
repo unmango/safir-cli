@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Cli.Services.Configuration;
 
 namespace Cli.Services.Installation
 {

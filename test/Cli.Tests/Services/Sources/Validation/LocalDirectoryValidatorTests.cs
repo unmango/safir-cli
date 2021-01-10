@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cli.Services;
-using Cli.Services.Sources.Validation;
+using Cli.Services.Configuration;
+using Cli.Services.Configuration.Validation.Validation;
 using Cli.Tests.Helpers;
 using FluentValidation.TestHelper;
 using Xunit;

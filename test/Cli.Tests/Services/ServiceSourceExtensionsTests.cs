@@ -1,5 +1,6 @@
 using System;
 using Cli.Services;
+using Cli.Services.Configuration;
 using Xunit;
 
 namespace Cli.Tests.Services

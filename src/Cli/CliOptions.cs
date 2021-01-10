@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cli.Services;
+using Cli.Services.Configuration;
 
 namespace Cli
 {

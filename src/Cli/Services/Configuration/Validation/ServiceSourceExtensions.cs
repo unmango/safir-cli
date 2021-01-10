@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.Internal;
 using FluentValidation.Results;
 
-namespace Cli.Services.Sources.Validation
+namespace Cli.Services.Configuration.Validation.Validation
 {
     internal static class ServiceSourceExtensions
     {

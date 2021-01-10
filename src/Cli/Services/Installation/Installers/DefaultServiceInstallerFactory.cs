@@ -1,7 +1,8 @@
 using System;
 using Cli.Internal.Wrappers.Git;
+using Cli.Services.Configuration;
+using Cli.Services.Configuration.Validation.Validation;
 using Cli.Services.Sources;
-using Cli.Services.Sources.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cli.Services.Installation.Installers

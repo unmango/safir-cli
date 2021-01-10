@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Cli.Services.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Cli.Services.Installation

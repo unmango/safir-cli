@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Cli.Services.Sources.Validation;
+using Cli.Services.Configuration;
+using Cli.Services.Configuration.Validation.Validation;
 using FluentValidation.Results;
 
 namespace Cli.Services.Sources
