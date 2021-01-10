@@ -5,10 +5,12 @@ using Cli.Services.Configuration;
 
 namespace Cli.Services
 {
-    internal interface IServiceRegistry
+    internal interface IServiceRegistry : IReadOnlyDictionary<string, IService>
     {
-        IReadOnlyList<ServiceEntry> Services { get; }
+        IEnumerable<IService> Services { get; }
 
-        Task<IService> GetServiceAsync(ServiceEntry service, CancellationToken cancellationToken = default);
+        IEnumerable<IServiceSource> GetSources(IService service);
+
+        IServiceCommand GetCommand(IService service, CommandCategory category);
     }
 }
