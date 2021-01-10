@@ -1,6 +1,7 @@
 namespace Cli.Services.Sources
 {
-    internal record LocalDirectorySource(string Directory)
+    internal record LocalDirectorySource(string SourceDirectory)
+        : ServiceSourceBase, ILocalDirectorySource
     {
     }
 }
