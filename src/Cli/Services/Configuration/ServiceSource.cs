@@ -1,7 +1,7 @@
 namespace Cli.Services.Configuration
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal record ServiceSource
+    internal record ServiceSource : IServiceSource
     {
         public SourceType? Type { get; init; }
         
