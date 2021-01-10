@@ -9,6 +9,7 @@ namespace Cli.Services.Configuration
     internal record ServiceOptions : IReadOnlyDictionary<string, ServiceEntry>
     {
         public const string DefaultInstallationDirectory = "services";
+        private readonly Dictionary<string, ServiceEntry> _services = new();
         private ServiceEntry? _manager;
         private ServiceEntry? _listener;
 
@@ -35,52 +36,23 @@ namespace Cli.Services.Configuration
             }
         }
 
-        public IEnumerator<KeyValuePair<string, ServiceEntry>> GetEnumerator()
-        {
-            if (Manager != null) yield return new KeyValuePair<string, ServiceEntry>(nameof(Manager), Manager);
-            if (Listener != null) yield return new KeyValuePair<string, ServiceEntry>(nameof(Listener), Listener);
-        }
+        #region Dictionary Support
+        public IEnumerator<KeyValuePair<string, ServiceEntry>> GetEnumerator() => _services.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _services.GetEnumerator();
 
-        public int Count => Keys.Count();
+        public int Count => _services.Count;
 
-        public bool ContainsKey(string key) => Keys.Contains(key);
+        public bool ContainsKey(string key) => _services.ContainsKey(key);
 
         public bool TryGetValue(string key, [MaybeNullWhen(false)] out ServiceEntry value)
-        {
-            value = null;
+            => _services.TryGetValue(key, out value);
 
-            using var enumerator = GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                if (enumerator.Current.Key != key) continue;
-                
-                value = enumerator.Current.Value;
-                return true;
-            }
+        public ServiceEntry this[string key] => _services[key];
 
-            return false;
-        }
+        public IEnumerable<string> Keys => _services.Keys;
 
-        public ServiceEntry this[string key] => throw new NotImplementedException();
-
-        public IEnumerable<string> Keys
-        {
-            get {
-                using var enumerator = GetEnumerator();
-                while (enumerator.MoveNext())
-                    yield return enumerator.Current.Key;
-            }
-        }
-
-        public IEnumerable<ServiceEntry> Values
-        {
-            get {
-                using var enumerator = GetEnumerator();
-                while (enumerator.MoveNext())
-                    yield return enumerator.Current.Value;
-            }
-        }
+        public IEnumerable<ServiceEntry> Values => _services.Values;
+        #endregion
     }
 }
