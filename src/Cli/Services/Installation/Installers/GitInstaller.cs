@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cli.Internal.Wrappers.Git;
 using Cli.Services.Configuration;
-using Cli.Services.Configuration.Validation.Validation;
+using Cli.Services.Configuration.Validation;
 using Cli.Services.Sources;
 using LibGit2Sharp;
 

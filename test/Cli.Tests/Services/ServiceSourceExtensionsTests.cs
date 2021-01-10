@@ -1,5 +1,4 @@
 using System;
-using Cli.Services;
 using Cli.Services.Configuration;
 using Xunit;
 
