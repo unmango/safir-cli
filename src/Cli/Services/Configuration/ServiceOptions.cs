@@ -1,58 +1,92 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Cli.Services.Configuration
 {
-    internal record ServiceOptions : IReadOnlyDictionary<string, ServiceEntry>
+    internal record ServiceOptions : IDictionary<string, ServiceEntry>
     {
         public const string DefaultInstallationDirectory = "services";
         private readonly Dictionary<string, ServiceEntry> _services = new();
-        private ServiceEntry? _manager;
-        private ServiceEntry? _listener;
 
         public string? CustomInstallationDirectory { get; init; }
 
-        public ServiceEntry? Manager
+        private static ServiceEntry WithName(ServiceEntry service, string name)
         {
-            get => _manager;
-            set {
-                if (value == null) throw new ArgumentNullException(nameof(Manager));
-                
-                // Maybe won't always want to overwrite a custom name.
-                _manager = value with { Name = nameof(Manager) };
-            }
-        }
-
-        public ServiceEntry? Listener
-        {
-            get => _listener;
-            set {
-                if (value == null) throw new ArgumentNullException((nameof(Listener)));
-
-                _listener = value with { Name = nameof(Listener) };
-            }
+            return service with { Name = service.Name ?? name };
         }
 
         #region Dictionary Support
-        public IEnumerator<KeyValuePair<string, ServiceEntry>> GetEnumerator() => _services.GetEnumerator();
+        IEnumerator<KeyValuePair<string, ServiceEntry>> IEnumerable<KeyValuePair<string, ServiceEntry>>.GetEnumerator()
+        {
+            return _services.GetEnumerator();
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() => _services.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_services).GetEnumerator();
+        }
 
-        public int Count => _services.Count;
+        void ICollection<KeyValuePair<string, ServiceEntry>>.Add(KeyValuePair<string, ServiceEntry> item)
+        {
+            var (key, value) = item;
+            var updated = new KeyValuePair<string, ServiceEntry>(key, WithName(value, key));
+            ((ICollection<KeyValuePair<string, ServiceEntry>>)_services).Add(updated);
+        }
 
-        public bool ContainsKey(string key) => _services.ContainsKey(key);
+        void ICollection<KeyValuePair<string, ServiceEntry>>.Clear()
+        {
+            _services.Clear();
+        }
 
-        public bool TryGetValue(string key, [MaybeNullWhen(false)] out ServiceEntry value)
-            => _services.TryGetValue(key, out value);
+        bool ICollection<KeyValuePair<string, ServiceEntry>>.Contains(KeyValuePair<string, ServiceEntry> item)
+        {
+            return ((ICollection<KeyValuePair<string, ServiceEntry>>)_services).Contains(item);
+        }
 
-        public ServiceEntry this[string key] => _services[key];
+        void ICollection<KeyValuePair<string, ServiceEntry>>.CopyTo(
+            KeyValuePair<string, ServiceEntry>[] array,
+            int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<string, ServiceEntry>>)_services).CopyTo(array, arrayIndex);
+        }
 
-        public IEnumerable<string> Keys => _services.Keys;
+        bool ICollection<KeyValuePair<string, ServiceEntry>>.Remove(KeyValuePair<string, ServiceEntry> item)
+        {
+            return ((ICollection<KeyValuePair<string, ServiceEntry>>)_services).Remove(item);
+        }
 
-        public IEnumerable<ServiceEntry> Values => _services.Values;
+        int ICollection<KeyValuePair<string, ServiceEntry>>.Count => _services.Count;
+
+        bool ICollection<KeyValuePair<string, ServiceEntry>>.IsReadOnly
+            => ((ICollection<KeyValuePair<string, ServiceEntry>>)_services).IsReadOnly;
+
+        void IDictionary<string, ServiceEntry>.Add(string key, ServiceEntry value)
+        {
+            _services.Add(key, WithName(value, key));
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _services.ContainsKey(key);
+        }
+
+        bool IDictionary<string, ServiceEntry>.Remove(string key) => _services.Remove(key);
+
+        bool IDictionary<string, ServiceEntry>.TryGetValue(string key, [MaybeNullWhen(false)] out ServiceEntry value)
+        {
+            return _services.TryGetValue(key, out value);
+        }
+
+        public ServiceEntry this[string key]
+        {
+            get => _services[key];
+            set => _services[key] = WithName(value, key);
+        }
+
+        public ICollection<string> Keys => ((IDictionary<string, ServiceEntry>)_services).Keys;
+
+        public ICollection<ServiceEntry> Values => ((IDictionary<string, ServiceEntry>)_services).Values;
         #endregion
     }
 }
