@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Cli.Services.Configuration;
 using Cli.Services.Configuration.Validation;
 using FluentValidation.Results;
@@ -9,6 +11,30 @@ namespace Cli.Services.Sources
     // TODO: Infer source type?
     internal static class ServiceSourceExtensions
     {
+        public static IServiceSource GetSource(this ServiceSource source)
+            => source.InferSourceType() switch {
+                SourceType.Docker
+                    => throw new InvalidOperationException("Unable to create concrete \"Docker\" source type"),
+                SourceType.DockerBuild => source.GetDockerBuildSource(),
+                SourceType.DockerImage => source.GetDockerImageSource(),
+                SourceType.DotnetTool => source.GetDotnetToolSource(),
+                SourceType.Git => source.GetGitSource(),
+                SourceType.LocalDirectory => source.GetLocalDirectorySource(),
+                null => throw new InvalidOperationException("Unable to infer source type"),
+                _ => throw new NotSupportedException($"Source type {source.Type} is not supported")
+            };
+
+        public static bool TryGetSource(this ServiceSource source, out IServiceSource concrete)
+        {
+            var validation = source.Validate();
+
+            concrete = validation.IsValid
+                ? source.GetSource()
+                : source.GetInvalidSource(validation.Errors);
+
+            return validation.IsValid;
+        }
+
         public static DockerBuildSource GetDockerBuildSource(this ServiceSource source)
         {
             source.ValidateDockerBuild(o => o.ThrowOnFailures());
@@ -42,7 +68,7 @@ namespace Cli.Services.Sources
         public static bool TryGetDockerBuildSource(
             this ServiceSource source,
             [MaybeNullWhen(false)] out DockerBuildSource dockerBuild)
-            => source.TryGet(
+            => source.TryGetValidation(
                 x => x.ValidateDockerBuild(),
                 x => new DockerBuildSource(x.BuildContext!, x.Tag),
                 out dockerBuild);
@@ -50,7 +76,7 @@ namespace Cli.Services.Sources
         public static bool TryGetDockerImageSource(
             this ServiceSource source,
             [MaybeNullWhen(false)] out DockerImageSource dockerImage)
-            => source.TryGet(
+            => source.TryGetValidation(
                 x => x.ValidateDockerImage(),
                 x => new DockerImageSource(x.ImageName!, x.Tag),
                 out dockerImage);
@@ -58,7 +84,7 @@ namespace Cli.Services.Sources
         public static bool TryGetDotnetToolSource(
             this ServiceSource source,
             [MaybeNullWhen(false)] out DotnetToolSource dotnetTool)
-            => source.TryGet(
+            => source.TryGetValidation(
                 x => x.ValidateDotnetTool(),
                 x => new DotnetToolSource(x.ToolName!, x.ExtraArgs),
                 out dotnetTool);
@@ -66,7 +92,7 @@ namespace Cli.Services.Sources
         public static bool TryGetGitSource(
             this ServiceSource source,
             [MaybeNullWhen(false)] out GitSource git)
-            => source.TryGet(
+            => source.TryGetValidation(
                 x => x.ValidateGit(),
                 x => new GitSource(x.CloneUrl!),
                 out git);
@@ -74,12 +100,17 @@ namespace Cli.Services.Sources
         public static bool TryGetLocalDirectorySource(
             this ServiceSource source,
             [MaybeNullWhen(false)] out LocalDirectorySource localDirectory)
-            => source.TryGet(
+            => source.TryGetValidation(
                 x => x.ValidateLocalDirectory(),
                 x => new LocalDirectorySource(x.SourceDirectory!),
                 out localDirectory);
 
-        private static bool TryGet<T>(
+        private static InvalidSource GetInvalidSource(this ServiceSource source, IEnumerable<ValidationFailure> errors)
+        {
+            return new InvalidSource(source, errors.Select(x => x.ErrorMessage));
+        }
+
+        private static bool TryGetValidation<T>(
             this ServiceSource source,
             Func<ServiceSource, ValidationResult> validator,
             Func<ServiceSource, T> factory,
