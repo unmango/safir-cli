@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,40 +9,35 @@ using Microsoft.Extensions.Options;
 
 namespace Cli.Services
 {
-    internal class DefaultServiceRegistry : IServiceRegistry
+    internal class DefaultServiceRegistry : IServiceRegistry, IDisposable
     {
         private const int StaticallyConfiguredServices = 2;
         
         private readonly IOptionsMonitor<ServiceOptions> _optionsMonitor;
-        private readonly Dictionary<string, IService> _services = new(StaticallyConfiguredServices);
-        private readonly Dictionary<IService, IEnumerable<IServiceSource>> _sources = new();
+        private readonly IDisposable _changeToken;
+        private readonly Dictionary<string, IService> _services = new(StaticallyConfiguredServices + 1);
 
         public DefaultServiceRegistry(IOptionsMonitor<ServiceOptions> optionsMonitor)
         {
             _optionsMonitor = optionsMonitor;
-            
-            PopulateServices();
+            PopulateServices(optionsMonitor.CurrentValue);
+            _changeToken = optionsMonitor.OnChange(PopulateServices);
         }
 
         public IEnumerable<IService> Services => _services.Values;
-
-        public IEnumerable<IServiceSource> GetSources(IService service)
+        
+        public void Dispose()
         {
-            return _sources[service];
+            _changeToken.Dispose();
         }
 
-        public IServiceCommand GetCommand(IService service, CommandCategory category)
+        private void PopulateServices(ServiceOptions options)
         {
-            throw new System.NotImplementedException();
-        }
-
-        private void PopulateServices()
-        {
-            foreach (var (key, value) in _optionsMonitor.CurrentValue)
+            foreach (var (key, value) in options)
             {
-                var service = value.GetService();
+                var sources = value.Sources.Select(x => x.GetSource());
+                var service = value.GetService(sources);
                 _services.Add(key, service);
-                _sources[service] = value.Sources.Select(x => x.GetSource());
             }
         }
 
