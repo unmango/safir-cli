@@ -4,12 +4,17 @@ namespace Cli.Services.Sources
 {
     internal abstract record ServiceSourceBase : IServiceSource
     {
-        public SourceType? Type { get; init; }
+        public ServiceSourceBase(SourceType type, string name, int priority = default)
+        {
+            Type = type;
+            Name = name;
+            Priority = priority;
+        }
         
-        public CommandType? Command { get; init; }
+        public SourceType Type { get; }
         
-        public string? Name { get; init; }
+        public string Name { get; }
         
-        public int? Priority { get; init; }
+        public int Priority { get; init; }
     }
 }

@@ -38,7 +38,7 @@ namespace Cli.Tests.Services.Sources
 
             var result = source.GetSource();
 
-            var (buildContext, tag) = Assert.IsType<DockerBuildSource>(result);
+            var (_, buildContext, tag) = Assert.IsType<DockerBuildSource>(result);
             Assert.Equal(source.BuildContext, buildContext);
             Assert.Equal(source.Tag, tag);
         }
@@ -54,7 +54,7 @@ namespace Cli.Tests.Services.Sources
 
             var result = source.GetSource();
 
-            var (imageName, tag) = Assert.IsType<DockerImageSource>(result);
+            var (_, imageName, tag) = Assert.IsType<DockerImageSource>(result);
             Assert.Equal(source.ImageName, imageName);
             Assert.Equal(source.Tag, tag);
         }
@@ -70,7 +70,7 @@ namespace Cli.Tests.Services.Sources
 
             var result = source.GetSource();
 
-            var (toolName, extraArgs) = Assert.IsType<DotnetToolSource>(result);
+            var (_ ,toolName, extraArgs) = Assert.IsType<DotnetToolSource>(result);
             Assert.Equal(source.ToolName, toolName);
             Assert.Equal(source.ExtraArgs, extraArgs);
         }

@@ -18,19 +18,19 @@ namespace Cli.Services.Installation.Installers
         
         public IServiceInstaller GetDockerBuildInstaller(ServiceSource source)
         {
-            var (buildContext, tag) = source.GetDockerBuildSource();
+            var (_, buildContext, tag) = source.GetDockerBuildSource();
             return new DockerBuildInstaller(buildContext, tag);
         }
 
         public IServiceInstaller GetDockerImageInstaller(ServiceSource source)
         {
-            var (imageName, tag) = source.GetDockerImageSource();
+            var (_, imageName, tag) = source.GetDockerImageSource();
             return new DockerImageInstaller(imageName, tag);
         }
 
         public IServiceInstaller GetDotnetToolInstaller(ServiceSource source)
         {
-            var (toolName, extraArgs) = source.GetDotnetToolSource();
+            var (_, toolName, extraArgs) = source.GetDotnetToolSource();
             return new DotnetToolInstaller(toolName, extraArgs);
         }
 

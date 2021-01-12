@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cli.Services;
 using Cli.Services.Configuration;
 using Cli.Services.Installation;
+using Cli.Tests.Helpers;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
@@ -45,7 +46,7 @@ namespace Cli.Tests.Services.Installation
         [Fact]
         public async Task InvokesPipeline()
         {
-            var expectedSources = new[] { new ServiceSource() };
+            var expectedSources = new[] { new TestConcreteServiceSource() };
             IService service = _defaultService with { Sources = expectedSources };
             var pipeline = _mocker.GetMock<IInstallationPipeline>();
 

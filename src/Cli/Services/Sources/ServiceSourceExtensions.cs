@@ -38,31 +38,31 @@ namespace Cli.Services.Sources
         public static DockerBuildSource GetDockerBuildSource(this ServiceSource source)
         {
             source.ValidateDockerBuild(o => o.ThrowOnFailures());
-            return new DockerBuildSource(source.BuildContext!, source.Tag);
+            return new DockerBuildSource(source.Name!, source.BuildContext!, source.Tag);
         }
 
         public static DockerImageSource GetDockerImageSource(this ServiceSource source)
         {
             source.ValidateDockerImage(o => o.ThrowOnFailures());
-            return new DockerImageSource(source.ImageName!, source.Tag);
+            return new DockerImageSource(source.Name!, source.ImageName!, source.Tag);
         }
 
         public static DotnetToolSource GetDotnetToolSource(this ServiceSource source)
         {
             source.ValidateDotnetTool(o => o.ThrowOnFailures());
-            return new DotnetToolSource(source.ToolName!, source.ExtraArgs);
+            return new DotnetToolSource(source.Name!, source.ToolName!, source.ExtraArgs);
         }
 
         public static GitSource GetGitSource(this ServiceSource source)
         {
             source.ValidateGit(o => o.ThrowOnFailures());
-            return new GitSource(source.CloneUrl!);
+            return new GitSource(source.Name!, source.CloneUrl!);
         }
 
         public static LocalDirectorySource GetLocalDirectorySource(this ServiceSource source)
         {
             source.ValidateLocalDirectory(o => o.ThrowOnFailures());
-            return new LocalDirectorySource(source.SourceDirectory!);
+            return new LocalDirectorySource(source.Name!, source.SourceDirectory!);
         }
 
         public static bool TryGetDockerBuildSource(
@@ -70,7 +70,7 @@ namespace Cli.Services.Sources
             [MaybeNullWhen(false)] out DockerBuildSource dockerBuild)
             => source.TryGetValidation(
                 x => x.ValidateDockerBuild(),
-                x => new DockerBuildSource(x.BuildContext!, x.Tag),
+                x => new DockerBuildSource(x.Name!, x.BuildContext!, x.Tag),
                 out dockerBuild);
 
         public static bool TryGetDockerImageSource(
@@ -78,7 +78,7 @@ namespace Cli.Services.Sources
             [MaybeNullWhen(false)] out DockerImageSource dockerImage)
             => source.TryGetValidation(
                 x => x.ValidateDockerImage(),
-                x => new DockerImageSource(x.ImageName!, x.Tag),
+                x => new DockerImageSource(x.Name!, x.ImageName!, x.Tag),
                 out dockerImage);
 
         public static bool TryGetDotnetToolSource(
@@ -86,7 +86,7 @@ namespace Cli.Services.Sources
             [MaybeNullWhen(false)] out DotnetToolSource dotnetTool)
             => source.TryGetValidation(
                 x => x.ValidateDotnetTool(),
-                x => new DotnetToolSource(x.ToolName!, x.ExtraArgs),
+                x => new DotnetToolSource(x.Name!, x.ToolName!, x.ExtraArgs),
                 out dotnetTool);
 
         public static bool TryGetGitSource(
@@ -94,7 +94,7 @@ namespace Cli.Services.Sources
             [MaybeNullWhen(false)] out GitSource git)
             => source.TryGetValidation(
                 x => x.ValidateGit(),
-                x => new GitSource(x.CloneUrl!),
+                x => new GitSource(x.Name!, x.CloneUrl!),
                 out git);
 
         public static bool TryGetLocalDirectorySource(
@@ -102,12 +102,12 @@ namespace Cli.Services.Sources
             [MaybeNullWhen(false)] out LocalDirectorySource localDirectory)
             => source.TryGetValidation(
                 x => x.ValidateLocalDirectory(),
-                x => new LocalDirectorySource(x.SourceDirectory!),
+                x => new LocalDirectorySource(x.Name!, x.SourceDirectory!),
                 out localDirectory);
 
         private static InvalidSource GetInvalidSource(this ServiceSource source, IEnumerable<ValidationFailure> errors)
         {
-            return new InvalidSource(source, errors.Select(x => x.ErrorMessage));
+            return new(source, errors.Select(x => x.ErrorMessage));
         }
 
         private static bool TryGetValidation<T>(

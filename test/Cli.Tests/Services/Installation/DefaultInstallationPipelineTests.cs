@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cli.Services;
 using Cli.Services.Configuration;
 using Cli.Services.Installation;
+using Cli.Tests.Helpers;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
@@ -21,7 +22,7 @@ namespace Cli.Tests.Services.Installation
         private readonly InstallationContext _context = new(
             string.Empty,
             new DefaultService("Name", new List<IServiceSource>()),
-            new[] { new ServiceSource() });
+            new[] { new TestConcreteServiceSource() });
 
         public DefaultInstallationPipelineTests()
         {

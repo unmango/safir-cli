@@ -9,7 +9,8 @@ namespace Cli.Services.Configuration
         public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> sources)
             where T : IServiceSource
         {
-            return sources.OrderByDescending(x => x.Priority.HasValue).ThenBy(x => x.Priority);
+            // TODO: Logic for putting entries with 'unset' priority last when converting to concrete entry
+            return sources.OrderByDescending(x => x.Priority == default).ThenBy(x => x.Priority);
         }
 
         public static T HighestPriority<T>(
