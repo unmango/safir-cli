@@ -56,9 +56,7 @@ namespace Cli
                         .Bind(config.GetSection("services"))
                         .AddValidators();
 
-                    services.AddTransient<IServiceDirectory, ConfigurationServiceDirectory>();
-
-                    services.AddInstallationService();
+                    services.AddSafirCliServices();
                 })
                 .ConfigureLogging((context, builder) => {
                     var configDir = context.Configuration[ConfigDirectoryKey];
