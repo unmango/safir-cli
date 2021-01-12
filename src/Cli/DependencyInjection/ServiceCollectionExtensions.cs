@@ -1,3 +1,4 @@
+using Cli.Internal;
 using Cli.Internal.Wrappers.Git;
 using Cli.Services;
 using Cli.Services.Installation;
@@ -12,6 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddLogging();
             services.AddOptions();
+
+            services.AddScoped<IProgressReporter, ConsoleProgressReporter>();
             
             services.AddTransient<IServiceDirectory, ConfigurationServiceDirectory>();
             services.AddScoped<IServiceRegistry, DefaultServiceRegistry>();
