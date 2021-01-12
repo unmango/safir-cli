@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cli.Internal.Wrappers.Git;
+using Cli.Services;
 using Cli.Services.Configuration;
 using Cli.Services.Installation;
 using Cli.Services.Installation.Installers;
+using Cli.Services.Sources;
 using Cli.Tests.Helpers;
 using LibGit2Sharp;
 using Moq;
@@ -22,13 +24,11 @@ namespace Cli.Tests.Services.Installation.Installers
         private readonly AutoMocker _mocker = new();
         private readonly GitInstaller _installer;
 
-        private static readonly ServiceSource _defaultSource = new() {
-            Type = SourceType.Git, CloneUrl = CloneUrl
-        };
+        private static readonly GitSource _defaultSource = new(CloneUrl);
 
         private static readonly InstallationContext _defaultContext = new(
             WorkingDirectory,
-            new ServiceEntry(),
+            new DefaultService("Name", new List<IServiceSource>()),
             new[] { _defaultSource });
 
         public GitInstallerTests()
@@ -146,7 +146,7 @@ namespace Cli.Tests.Services.Installation.Installers
             const string name = "serviceName";
             var expected = $"{WorkingDirectory}/{name}".ToLower();
             var context = _defaultContext with {
-                Service = new ServiceEntry { Name = name }
+                Service = new DefaultService(name, new List<IServiceSource>())
             };
             var repository = _mocker.GetMock<IRepositoryFunctions>();
 

@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Cli.Services.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Cli.Services.Installation
@@ -24,7 +23,7 @@ namespace Cli.Services.Installation
         }
 
         public async Task InstallAsync(
-            ServiceEntry service,
+            IService service,
             string? directory = null,
             CancellationToken cancellationToken = default)
         {

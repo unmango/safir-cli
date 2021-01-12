@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Cli.Services;
 using Cli.Services.Configuration;
 using Cli.Services.Installation;
 using Moq;
@@ -19,7 +20,7 @@ namespace Cli.Tests.Services.Installation
 
         private readonly InstallationContext _context = new(
             string.Empty,
-            new ServiceEntry(),
+            new DefaultService("Name", new List<IServiceSource>()),
             new[] { new ServiceSource() });
 
         public DefaultInstallationPipelineTests()

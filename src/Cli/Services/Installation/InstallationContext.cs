@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Cli.Services.Configuration;
 
 namespace Cli.Services.Installation
 {
     internal record InstallationContext(
         string WorkingDirectory,
-        ServiceEntry Service,
-        IEnumerable<ServiceSource> Sources)
+        IService Service,
+        IEnumerable<IServiceSource> Sources)
     {
         public Exception? Exception { get; init; }
         

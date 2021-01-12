@@ -30,7 +30,7 @@ namespace Cli.Services.Installation.Installers
 
         public override bool AppliesTo(InstallationContext context)
         {
-            return context.Sources.Any(x => Sources.ServiceSourceExtensions.TryGetGitSource(x, out _));
+            return context.Sources.Any(x => x is GitSource);
         }
 
         public override ValueTask InstallAsync(
@@ -55,12 +55,9 @@ namespace Cli.Services.Installation.Installers
                 return;
             }
 
-            foreach (var source in sources)
+            foreach (var source in sources.OfType<GitSource>())
             {
-                if (source.TryGetGitSource(out var gitSource))
-                {
-                    Clone(gitSource.CloneUrl, cloneDirectory);
-                }
+                Clone(source.CloneUrl, cloneDirectory);
             }
         }
 
@@ -74,6 +71,7 @@ namespace Cli.Services.Installation.Installers
 
         private static string ValidateUrl(string? cloneUrl)
         {
+            // TODO: Add validation to GitSource and use that instead
             var result = new ServiceSource {
                 Type = SourceType.Git,
                 CloneUrl = cloneUrl
