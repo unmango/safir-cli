@@ -58,7 +58,7 @@ namespace Cli.Tests.Services.Installation.Installers
             Assert.False(result);
         }
 
-        [Theory]
+        [Theory(Skip = "Need to review if this is functionality I want")]
         [ClassData(typeof(NullOrWhitespaceStrings))]
         public void DoesNotApplyToInvalidCloneUrl(string cloneUrl)
         {
@@ -84,17 +84,18 @@ namespace Cli.Tests.Services.Installation.Installers
         {
             var repository = _mocker.GetMock<IRepositoryFunctions>();
             repository.Setup(x => x.IsValid(WorkingDirectory)).Returns(false);
+            var expected = $"{WorkingDirectory}/name";
 
             await _installer.InstallAsync(_defaultContext).AsTask();
 
-            repository.Verify(x => x.Clone(CloneUrl, WorkingDirectory, It.IsAny<CloneOptions>()));
+            repository.Verify(x => x.Clone(CloneUrl, expected, It.IsAny<CloneOptions>()));
         }
 
         [Fact]
         public async Task InstallAsync_SkipsCloneWhenRepositoryExists()
         {
             var repository = _mocker.GetMock<IRepositoryFunctions>();
-            repository.Setup(x => x.IsValid(WorkingDirectory)).Returns(true);
+            repository.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
 
             await _installer.InstallAsync(_defaultContext);
 
@@ -109,10 +110,11 @@ namespace Cli.Tests.Services.Installation.Installers
             const string cloneUrl = "https://different.example.com/repo.git";
             var repository = _mocker.GetMock<IRepositoryFunctions>();
             var installer = new GitInstaller(cloneUrl, repository.Object);
+            var expected = $"{WorkingDirectory}/name";
 
             await installer.InstallAsync(_defaultContext);
 
-            repository.Verify(x => x.Clone(cloneUrl, WorkingDirectory, It.IsAny<CloneOptions>()));
+            repository.Verify(x => x.Clone(cloneUrl, expected, It.IsAny<CloneOptions>()));
             repository.Verify(x => x.Clone(CloneUrl, It.IsAny<string>(), It.IsAny<CloneOptions>()), Times.Never);
         }
 
@@ -128,11 +130,12 @@ namespace Cli.Tests.Services.Installation.Installers
                 }
             };
             var repository = _mocker.GetMock<IRepositoryFunctions>();
+            var expected = $"{WorkingDirectory}/name";
 
             await _installer.InstallAsync(context);
 
-            repository.Verify(x => x.Clone(url1, WorkingDirectory, It.IsAny<CloneOptions>()));
-            repository.Verify(x => x.Clone(url2, WorkingDirectory, It.IsAny<CloneOptions>()));
+            repository.Verify(x => x.Clone(url1, expected, It.IsAny<CloneOptions>()));
+            repository.Verify(x => x.Clone(url2, expected, It.IsAny<CloneOptions>()));
             repository.Verify(
                 x => x.Clone(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CloneOptions>()),
                 Times.Exactly(2));
