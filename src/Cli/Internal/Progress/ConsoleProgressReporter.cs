@@ -1,4 +1,3 @@
-using System;
 using System.CommandLine;
 
 namespace Cli.Internal.Progress
@@ -16,7 +15,7 @@ namespace Cli.Internal.Progress
 
         public void Report(ProgressContext context)
         {
-            throw new NotImplementedException();
+            _console.Out.Write($"{context.Value}");
         }
 
         public void Dispose()
