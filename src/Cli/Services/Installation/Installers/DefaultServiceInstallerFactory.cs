@@ -1,5 +1,6 @@
 using System;
 using Cli.Internal;
+using Cli.Internal.Progress;
 using Cli.Internal.Wrappers.Git;
 using Cli.Services.Configuration;
 using Cli.Services.Configuration.Validation;

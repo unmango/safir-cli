@@ -1,4 +1,5 @@
 using Cli.Internal;
+using Cli.Internal.Progress;
 using Cli.Internal.Wrappers.Git;
 using Cli.Services;
 using Cli.Services.Installation;
